@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa238156e4c3599499486983d035d067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBot: 1
   maxAngle: 50
   maxTorque: 1000
   wheelShape: {fileID: 585842302875635063, guid: adf7ddda6ce26384cbefd5c5c8ec7b5c,
@@ -225,7 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18db5f05346cab24fba0756e713f6f18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  naturalFrequency: 10
+  naturalFrequency: 15
   dampingRatio: 1
   forceShift: 1
   setSuspensionDistance: 1
@@ -249,7 +250,7 @@ MonoBehaviour:
   startProtection: 1
   rayDistance: 25
   drawRays: 1
-  checkPoints: []
+  network: {fileID: 0}
   fitness: 0
   stop: 0
 --- !u!1 &5975925403845127700

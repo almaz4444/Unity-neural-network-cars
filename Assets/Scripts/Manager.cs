@@ -6,7 +6,7 @@ using Cinemachine;
 
 public class Manager : MonoBehaviour
 {
-    // public const string BASE_BOT_NN = "BASE_BOT_NN";
+    public const string BASE_BOT_NN = "BASE_BOT_NN";
         
     public bool training;
     public float timeFrame = 20;
@@ -24,15 +24,15 @@ public class Manager : MonoBehaviour
 
     [Range(0.1f, 50f)] public float Gamespeed = 1f;
 
-    public List<NeuralNetwork> networks;
-    private List<Bot> bots;
+    public List<NeuralNetwork> networks = new List<NeuralNetwork>(8);
+    public List<Bot> bots = new List<Bot>(8);
     private int followingBot = 0;
 
     private void Start()
     {
         InitNetworks();
         if (training) InvokeRepeating("CreateBots", 0.1f, timeFrame);
-        else Invoke("CreateBots", 0.1f);
+        else CreateBots();
     }
 
     private void Update()
@@ -45,11 +45,10 @@ public class Manager : MonoBehaviour
                 if(bots[i].stop)
                 {
                     GameObject.Destroy(bots[i].gameObject);
-                    bots.RemoveAt(i);
 
                     Bot bot = (Instantiate(prefabs[i], spawnPoints[i])).GetComponent<Bot>();
                     bot.network = networks[i];
-                    bots.Add(bot);
+                    bots[i] = bot;
                     
                     vCam.Follow = bots[followingBot].transform;
                     vCam.LookAt = bots[followingBot].transform;
@@ -60,41 +59,35 @@ public class Manager : MonoBehaviour
 
     public void InitNetworks()
     {
-        networks = new List<NeuralNetwork>(8);
-        print(networks.Count);
         for (int i = 0; i < populationSize; i++)
         {
             NeuralNetwork net = new NeuralNetwork(layers);
-            print((i, net));
-            net.Load("Assets/Save.txt");
-            // networks.Add(net);
+            // net.Load("Assets/Save.txt");
+            net.Load(BASE_BOT_NN);
+            networks[i] = net;
         }
     }
 
     public void CreateBots()
     {
         Time.timeScale = Gamespeed;
-
-        if (bots != null)
+        
+        if (bots[0] != null)
         {
             for (int i = 0; i < bots.Count; i++)
             {
                 GameObject.Destroy(bots[i].gameObject);
+                bots[i] = null;
             }
 
             SortNetworks();
         }
-
-        bots = new List<Bot>();
-        print((populationSize, bots));
+        
         for (int i = 0; i < populationSize; i++)
         {
-            print(i);
-            if(i == prefabs.Length - 1) i = 0;
-
             Bot bot = (Instantiate(prefabs[i], spawnPoints[i])).GetComponent<Bot>();
             bot.network = networks[i];
-            bots.Add(bot);
+            bots[i] = bot;
         }
 
         vCam.Follow = bots[followingBot].transform;
