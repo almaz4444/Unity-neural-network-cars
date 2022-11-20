@@ -25,7 +25,7 @@ public class Manager : MonoBehaviour
     [Range(0.1f, 50f)] public float Gamespeed = 1f;
 
     public List<NeuralNetwork> networks;
-    public List<Bot> b;
+    private List<Bot> bots;
     private int followingBot = 0;
 
     private void Start()
