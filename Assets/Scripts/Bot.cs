@@ -16,11 +16,8 @@ public class Bot : MonoBehaviour
     private float[] input;
     public NeuralNetwork network;
 
-    public GameObject[] checkPoints;
     public float fitness;
     public bool stop = false;
-
-    private int checkPointNum = 0;
 
     private void Start()
     {
@@ -96,11 +93,6 @@ public class Bot : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.layer == LayerMask.NameToLayer("CheckPoint") && collider.gameObject == checkPoints[checkPointNum])
-        {
-            fitness += 1;
-            checkPointNum++;
-        }
     }
 
 

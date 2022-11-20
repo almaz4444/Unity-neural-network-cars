@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public class NeuralNetwork : IComparable<NeuralNetwork>
+public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
 {
     private int[] layers;
     private float[][] neurons;
@@ -192,38 +192,38 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         //     }
         // }
         
-        TextReader tr = new StreamReader(path);
-        int NumberOfLines = (int)new FileInfo(path).Length;
-        string[] ListLines = new string[NumberOfLines];
-        int index = 1;
-        for (int i = 1; i < NumberOfLines; i++)
-        {
-            ListLines[i] = tr.ReadLine();
-        }
-        tr.Close();
-        if (new FileInfo(path).Length > 0)
-        {
-            for (int i = 0; i < biases.Length; i++)
-            {
-                for (int j = 0; j < biases[i].Length; j++)
-                {
-                    biases[i][j] = float.Parse(ListLines[index]);
-                    index++;
-                }
-            }
+        // TextReader tr = new StreamReader(path);
+        // int NumberOfLines = (int)new FileInfo(path).Length;
+        // string[] ListLines = new string[NumberOfLines];
+        // int index = 1;
+        // for (int i = 1; i < NumberOfLines; i++)
+        // {
+        //     ListLines[i] = tr.ReadLine();
+        // }
+        // tr.Close();
+        // if (new FileInfo(path).Length > 0)
+        // {
+        //     for (int i = 0; i < biases.Length; i++)
+        //     {
+        //         for (int j = 0; j < biases[i].Length; j++)
+        //         {
+        //             biases[i][j] = float.Parse(ListLines[index]);
+        //             index++;
+        //         }
+        //     }
 
-            for (int i = 0; i < weights.Length; i++)
-            {
-                for (int j = 0; j < weights[i].Length; j++)
-                {
-                    for (int k = 0; k < weights[i][j].Length; k++)
-                    {
-                        weights[i][j][k] = float.Parse(ListLines[index]); ;
-                        index++;
-                    }
-                }
-            }
-        }
+        //     for (int i = 0; i < weights.Length; i++)
+        //     {
+        //         for (int j = 0; j < weights[i].Length; j++)
+        //         {
+        //             for (int k = 0; k < weights[i][j].Length; k++)
+        //             {
+        //                 weights[i][j][k] = float.Parse(ListLines[index]); ;
+        //                 index++;
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     public void Save(string path)

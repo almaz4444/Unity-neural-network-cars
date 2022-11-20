@@ -7,19 +7,12 @@ using Cinemachine;
 public class Manager : MonoBehaviour
 {
     // public const string BASE_BOT_NN = "BASE_BOT_NN";
-    public const string BASE_BOT_NN = "Assets/Save.txt";
         
     public bool training;
-    public bool isRotatePlatforms;
     public float timeFrame = 20;
     public int populationSize;
     public GameObject[] prefabs;
     public Transform[] spawnPoints;
-    public Transform[] platforms;
-    public GameObject[] checkPoints1;
-    public GameObject[] checkPoints2;
-    public GameObject[] checkPoints3;
-    public GameObject[] checkPoints4;
     public CinemachineVirtualCamera vCam;
     public Toggle traningToggle;
 
@@ -32,19 +25,20 @@ public class Manager : MonoBehaviour
     [Range(0.1f, 50f)] public float Gamespeed = 1f;
 
     public List<NeuralNetwork> networks;
-    private List<Bot> bots;
+    public List<Bot> b;
     private int followingBot = 0;
 
     private void Start()
     {
         InitNetworks();
         if (training) InvokeRepeating("CreateBots", 0.1f, timeFrame);
-        else CreateBots();
+        else Invoke("CreateBots", 0.1f);
     }
 
     private void Update()
     {
-        if(training == false)
+        training = traningToggle.isOn;
+        if(training == false && bots != null)
         {
             for (int i = 0; i < bots.Count; i++)
             {
@@ -55,12 +49,7 @@ public class Manager : MonoBehaviour
 
                     Bot bot = (Instantiate(prefabs[i], spawnPoints[i])).GetComponent<Bot>();
                     bot.network = networks[i];
-                    if(i == 0) bot.checkPoints = checkPoints1;
-                    if(i == 1) bot.checkPoints = checkPoints2;
-                    if(i == 2) bot.checkPoints = checkPoints3;
-                    if(i == 3) bot.checkPoints = checkPoints4;
                     bots.Add(bot);
-                    RotatePlatform();
                     
                     vCam.Follow = bots[followingBot].transform;
                     vCam.LookAt = bots[followingBot].transform;
@@ -71,12 +60,14 @@ public class Manager : MonoBehaviour
 
     public void InitNetworks()
     {
-        networks = new List<NeuralNetwork>();
+        networks = new List<NeuralNetwork>(8);
+        print(networks.Count);
         for (int i = 0; i < populationSize; i++)
         {
             NeuralNetwork net = new NeuralNetwork(layers);
-            net.Load(BASE_BOT_NN);
-            networks.Add(net);
+            print((i, net));
+            net.Load("Assets/Save.txt");
+            // networks.Add(net);
         }
     }
 
@@ -95,20 +86,17 @@ public class Manager : MonoBehaviour
         }
 
         bots = new List<Bot>();
+        print((populationSize, bots));
         for (int i = 0; i < populationSize; i++)
         {
+            print(i);
             if(i == prefabs.Length - 1) i = 0;
 
             Bot bot = (Instantiate(prefabs[i], spawnPoints[i])).GetComponent<Bot>();
             bot.network = networks[i];
-            if(i == 0) bot.checkPoints = checkPoints1;
-            if(i == 1) bot.checkPoints = checkPoints2;
-            if(i == 2) bot.checkPoints = checkPoints3;
-            if(i == 3) bot.checkPoints = checkPoints4;
             bots.Add(bot);
         }
-        RotatePlatform();
-        
+
         vCam.Follow = bots[followingBot].transform;
         vCam.LookAt = bots[followingBot].transform;
     }
@@ -120,23 +108,11 @@ public class Manager : MonoBehaviour
             bots[i].UpdateFitness();
         }
         networks.Sort();
-        networks[populationSize - 1].Save(BASE_BOT_NN);
+        networks[populationSize - 1].Save("Assets/Save.txt");
         for (int i = 0; i < populationSize / 2; i++)
         {
             networks[i] = networks[i + populationSize / 2].copy(new NeuralNetwork(layers));
             networks[i].Mutate((int)(1/MutationChance), MutationStrength);
-        }
-    }
-
-    public void RotatePlatform()
-    {
-        if(isRotatePlatforms)
-        {
-            for (int i = 0; i < platforms.Length; i++)
-            {
-                if(platforms[i].localScale.z > 0) platforms[i].localScale = new Vector3(platforms[i].localScale.x, platforms[i].localScale.y, -platforms[i].localScale.z);
-                else platforms[i].localScale = new Vector3(platforms[i].localScale.x, platforms[i].localScale.y, Mathf.Abs(platforms[i].localScale.z));
-            }
         }
     }
 
