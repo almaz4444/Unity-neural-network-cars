@@ -39,7 +39,7 @@ public class Bot : MonoBehaviour
 
                 if (Physics.Raycast(Ray, out hit, rayDistance, raycastMaskWalls))
                 {
-                    if (hit.collider.gameObject.name != gameObject.name)
+                    if (hit.collider.gameObject != this.gameObject)
                     {
                         input[i] = (rayDistance - hit.distance) / rayDistance;
                     }
@@ -80,6 +80,11 @@ public class Bot : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.layer == LayerMask.NameToLayer("Default") && !stop) 
+        {
+            fitness -= 10.0f;
+            stop = true;
+        }
+        if(collision.gameObject.layer == LayerMask.NameToLayer("CarsColliders") && collision.gameObject != this.gameObject && !stop)
         {
             fitness -= 10.0f;
             stop = true;

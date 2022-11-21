@@ -154,7 +154,7 @@ Transform:
   m_GameObject: {fileID: 5975925403795717931}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.0125962, z: 0}
-  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5975925403845127701}
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raycastMaskWalls:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 65
   rayStartPosition: {x: 0, y: -0.67, z: 0}
   radusRay: 20
   startProtection: 1

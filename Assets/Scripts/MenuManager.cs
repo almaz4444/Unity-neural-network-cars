@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Toggle traningToggle;
 
-    // Update is called once per frame
-    void Update()
+
+    public void Play()
     {
-        
+        if(traningToggle.isOn) PlayerPrefs.SetInt("TRANING", 1);
+        else PlayerPrefs.SetInt("TRANING", 0);
+
+        SceneManager.LoadScene("Game");
     }
 }

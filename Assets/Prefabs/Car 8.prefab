@@ -244,7 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   raycastMaskWalls:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 65
   rayStartPosition: {x: 0, y: -0.97, z: 0}
   radusRay: 20
   startProtection: 1

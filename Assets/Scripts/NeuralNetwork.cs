@@ -156,41 +156,49 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
 
     public void Load(string path)
     {
-        int NumberOfLines = 0;
-        int index = 0;
-        while (true)
+        if (PlayerPrefs.HasKey(path + "_0"))
         {
-            if(PlayerPrefs.HasKey(path + "_" + NumberOfLines.ToString())) NumberOfLines++;
-            else break;
-        }
-        string[] ListLines = new string[NumberOfLines];
-        for (int i = 0; i < NumberOfLines; i++)
-        {
-            ListLines[i] = PlayerPrefs.GetString(path + "_" + i.ToString()).ToString();
-        }
-        Debug.Log((NumberOfLines, ListLines));
-        if (NumberOfLines > 0)
-        {
-            for (int i = 0; i < biases.Length; i++)
+            int NumberOfLines = 0;
+            int index = 0;
+            while (true)
             {
-                for (int j = 0; j < biases[i].Length; j++)
-                {
-                    biases[i][j] = float.Parse(ListLines[index]);
-                    index++;
-                }
+                if(PlayerPrefs.HasKey(path + "_" + NumberOfLines.ToString())) NumberOfLines++;
+                else break;
             }
-
-            for (int i = 0; i < weights.Length; i++)
+            string[] ListLines = new string[NumberOfLines];
+            for (int i = 0; i < NumberOfLines; i++)
             {
-                for (int j = 0; j < weights[i].Length; j++)
+            ListLines[i] = PlayerPrefs.GetString(path + "_" + i.ToString()).ToString();
+            }
+            Debug.Log((NumberOfLines, ListLines));
+            if (NumberOfLines > 0)
+            {
+                for (int i = 0; i < biases.Length; i++)
                 {
-                    for (int k = 0; k < weights[i][j].Length; k++)
+                    for (int j = 0; j < biases[i].Length; j++)
                     {
-                        weights[i][j][k] = float.Parse(ListLines[index]); ;
+                        biases[i][j] = float.Parse(ListLines[index]);
                         index++;
                     }
                 }
+        
+                for (int i = 0; i < weights.Length; i++)
+                {
+                    for (int j = 0; j < weights[i].Length; j++)
+                    {
+                        for (int k = 0; k < weights[i][j].Length; k++)
+                        {
+                            weights[i][j][k] = float.Parse(ListLines[index]); ;
+                            index++;
+                        }
+                    }
+                }
             }
+        }
+        else
+        {
+            SaveToPlayerPrefs(path);
+            Load(path);
         }
         
         // TextReader tr = new StreamReader(path);

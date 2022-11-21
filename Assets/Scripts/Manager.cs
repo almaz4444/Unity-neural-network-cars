@@ -1,20 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
 using Cinemachine;
 
 public class Manager : MonoBehaviour
-{
-    public const string BASE_BOT_NN = "BASE_BOT_NN";
-        
-    public bool training;
+{        
+    public bool training = false;
     public float timeFrame = 20;
     public int populationSize;
     public GameObject[] prefabs;
     public Transform[] spawnPoints;
     public CinemachineVirtualCamera vCam;
-    public Toggle traningToggle;
 
     public int[] layers = new int[3] { 5, 3, 2 };
 
@@ -30,14 +26,17 @@ public class Manager : MonoBehaviour
 
     private void Start()
     {
+        if(PlayerPrefs.GetInt("TRANING") == 0) training = false;
+        else training = true;
+
         InitNetworks();
-        if (training) InvokeRepeating("CreateBots", 0.1f, timeFrame);
+        if (training) InvokeRepeating("CreateBots", 0.2f, timeFrame);
         else CreateBots();
     }
 
     private void Update()
     {
-        training = traningToggle.isOn;
+        if(Input.GetKey(KeyCode.Escape)) Application.Quit();
         if(training == false && bots != null)
         {
             for (int i = 0; i < bots.Count; i++)
@@ -59,11 +58,11 @@ public class Manager : MonoBehaviour
 
     public void InitNetworks()
     {
-        for (int i = 0; i < populationSize; i++)
+        NeuralNetwork net = new NeuralNetwork(layers);
+        net.Load("BASE_BOT_NN");
+
+        for (int i = 0; i < populationSize; i++) 
         {
-            NeuralNetwork net = new NeuralNetwork(layers);
-            // net.Load("Assets/Save.txt");
-            net.Load(BASE_BOT_NN);
             networks[i] = net;
         }
     }
@@ -77,7 +76,6 @@ public class Manager : MonoBehaviour
             for (int i = 0; i < bots.Count; i++)
             {
                 GameObject.Destroy(bots[i].gameObject);
-                bots[i] = null;
             }
 
             SortNetworks();
@@ -101,7 +99,8 @@ public class Manager : MonoBehaviour
             bots[i].UpdateFitness();
         }
         networks.Sort();
-        networks[populationSize - 1].Save("Assets/Save.txt");
+        print((networks[populationSize - 1], networks.Count));
+        networks[populationSize - 1].Save("BASE_BOT_NN");
         for (int i = 0; i < populationSize / 2; i++)
         {
             networks[i] = networks[i + populationSize / 2].copy(new NeuralNetwork(layers));
