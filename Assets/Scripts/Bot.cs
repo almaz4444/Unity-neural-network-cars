@@ -19,6 +19,9 @@ public class Bot : MonoBehaviour
     public float fitness;
     public bool stop = false;
 
+    private float timeOldRotateWheels = 0;
+    private float oldRotateWheels = 0;
+
     private void Start()
     {
         transform.parent = null;
@@ -49,9 +52,7 @@ public class Bot : MonoBehaviour
                     input[i] = 0;
                 }
             }
-            
-            if (GetComponent<Rigidbody>().velocity.magnitude < 0.01f) fitness -= 0.01f;
-            if (GetComponent<Rigidbody>().velocity.magnitude > 0.1f) fitness += 0.01f;
+            if (GetComponent<Rigidbody>().velocity.magnitude > 0.5f) fitness += 0.00001f;
 
             if (transform.position.y <= 50)
             {
@@ -59,13 +60,23 @@ public class Bot : MonoBehaviour
                 stop = true;
             }
 
-            fitness -= Time.deltaTime / 100;
-
             float[] output = network.FeedForward(input);
 
             GetComponent<RearWheelDrive>().horizontalAxis = output[0];
             GetComponent<RearWheelDrive>().verticalAxis = output[1];
 
+            if(output[0] != oldRotateWheels && Time.time - timeOldRotateWheels >= 0.5f)
+            {
+                fitness -= 0.01f;
+
+                oldRotateWheels = output[0];
+                timeOldRotateWheels = Time.time;
+            }
+        }
+        else
+        {
+            GetComponent<RearWheelDrive>().horizontalAxis = 0;
+            GetComponent<RearWheelDrive>().verticalAxis = 0;
         }
 
         if(startProtection > 0)

@@ -23,11 +23,13 @@ public class Manager : MonoBehaviour
     public List<NeuralNetwork> networks = new List<NeuralNetwork>(8);
     public List<Bot> bots = new List<Bot>(8);
     private int followingBot = 0;
+    private string neuralNetworkName;
 
     private void Start()
     {
         if(PlayerPrefs.GetInt("TRANING") == 0) training = false;
         else training = true;
+        neuralNetworkName = PlayerPrefs.GetString("SELECTED_BOT_NN");
 
         InitNetworks();
         if (training) InvokeRepeating("CreateBots", 0.2f, timeFrame);
@@ -59,7 +61,7 @@ public class Manager : MonoBehaviour
     public void InitNetworks()
     {
         NeuralNetwork net = new NeuralNetwork(layers);
-        net.Load("BASE_BOT_NN");
+        net.Load(neuralNetworkName);
 
         for (int i = 0; i < populationSize; i++) 
         {
@@ -100,7 +102,7 @@ public class Manager : MonoBehaviour
         }
         networks.Sort();
         print((networks[populationSize - 1], networks.Count));
-        networks[populationSize - 1].Save("BASE_BOT_NN");
+        networks[populationSize - 1].Save(neuralNetworkName);
         for (int i = 0; i < populationSize / 2; i++)
         {
             networks[i] = networks[i + populationSize / 2].copy(new NeuralNetwork(layers));
@@ -110,8 +112,10 @@ public class Manager : MonoBehaviour
 
     public void FollowBot(int where)
     {
-        if (followingBot < populationSize - 1 && where > 0) followingBot += where;
-        else followingBot = 0;
+        if (followingBot < populationSize - 1 && followingBot > 0) followingBot += where;
+        else if (followingBot == 0 && where < 0) followingBot = populationSize + where;
+        else if (followingBot == populationSize - 1 && where > 0) followingBot = 0;
+        else if (followingBot == populationSize - 1 || followingBot == 0) followingBot += where;
         
         vCam.Follow = bots[followingBot].transform;
         vCam.LookAt = bots[followingBot].transform;
