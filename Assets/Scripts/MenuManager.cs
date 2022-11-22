@@ -145,4 +145,9 @@ public class MenuManager : MonoBehaviour
             }
         }
     }
+
+    public void ShareNetwork()
+    {
+        
+    }
 }

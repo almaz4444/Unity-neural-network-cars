@@ -4,7 +4,9 @@ using UnityEngine;
 using Cinemachine;
 
 public class Manager : MonoBehaviour
-{        
+{
+    [TextArea] public string preTrainedNetwork;
+
     public bool training = false;
     public float timeFrame = 20;
     public int populationSize;
@@ -34,6 +36,11 @@ public class Manager : MonoBehaviour
         InitNetworks();
         if (training) InvokeRepeating("CreateBots", 0.2f, timeFrame);
         else CreateBots();
+
+        if(!PlayerPrefs.HasKey("BASE_BOT_NN_0"))
+        {
+            for (int i = 0; i < networks.Count; i++) networks[i].SaveToPlayerPrefs("BASE_BOT_NN", preTrainedNetwork);
+        }
     }
 
     private void Update()

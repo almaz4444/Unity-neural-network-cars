@@ -195,39 +195,6 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
                 }
             }
         }
-        
-        // TextReader tr = new StreamReader(path);
-        // int NumberOfLines = (int)new FileInfo(path).Length;
-        // string[] ListLines = new string[NumberOfLines];
-        // int index = 1;
-        // for (int i = 1; i < NumberOfLines; i++)
-        // {
-        //     ListLines[i] = tr.ReadLine();
-        // }
-        // tr.Close();
-        // if (new FileInfo(path).Length > 0)
-        // {
-        //     for (int i = 0; i < biases.Length; i++)
-        //     {
-        //         for (int j = 0; j < biases[i].Length; j++)
-        //         {
-        //             biases[i][j] = float.Parse(ListLines[index]);
-        //             index++;
-        //         }
-        //     }
-
-        //     for (int i = 0; i < weights.Length; i++)
-        //     {
-        //         for (int j = 0; j < weights[i].Length; j++)
-        //         {
-        //             for (int k = 0; k < weights[i][j].Length; k++)
-        //             {
-        //                 weights[i][j][k] = float.Parse(ListLines[index]); ;
-        //                 index++;
-        //             }
-        //         }
-        //     }
-        // }
     }
 
     public void Save(string path)
@@ -255,43 +222,18 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
                 }
             }
         }
-        
-        // File.Create(path).Close();
-        // StreamWriter writer = new StreamWriter(path, true);
-
-        // for (int i = 0; i < biases.Length; i++)
-        // {
-        //     for (int j = 0; j < biases[i].Length; j++)
-        //     {
-        //         writer.WriteLine(biases[i][j]);
-        //     }
-        // }
-
-        // for (int i = 0; i < weights.Length; i++)
-        // {
-        //     for (int j = 0; j < weights[i].Length; j++)
-        //     {
-        //         for (int k = 0; k < weights[i][j].Length; k++)
-        //         {
-        //             writer.WriteLine(weights[i][j][k]);
-        //         }
-        //     }
-        // }
-        // writer.Close();
     }
 
-    public void SaveToPlayerPrefs(string path)
+    public void SaveToPlayerPrefs(string path, string preTrainedNetwork)
     {
-        TextReader tr = new StreamReader("Assets/Save.txt");
-        int NumberOfLines = (int)new FileInfo("Assets/Save.txt").Length;
+        int NumberOfLines = preTrainedNetwork.Split(new char[] { '\n' }).Length;
         string[] ListLines = new string[NumberOfLines];
         int index = 1;
         for (int i = 1; i < NumberOfLines; i++)
         {
-            ListLines[i] = tr.ReadLine();
+            ListLines[i] = preTrainedNetwork.Split(new char[] { '\n' })[i - 1];
         }
         Debug.Log(NumberOfLines);
-        tr.Close();
         if (new FileInfo("Assets/Save.txt").Length > 0)
         {
             for (int i = 0; i < biases.Length; i++)
@@ -309,12 +251,11 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
                 {
                     for (int k = 0; k < weights[i][j].Length; k++)
                     {
-                        weights[i][j][k] = float.Parse(ListLines[index]); ;
+                        weights[i][j][k] = float.Parse(ListLines[index]);
                         index++;
                     }
                 }
             }
         }
-        Save(path);
     }
 }
