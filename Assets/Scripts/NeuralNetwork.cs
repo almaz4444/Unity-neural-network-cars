@@ -168,7 +168,7 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
             string[] ListLines = new string[NumberOfLines];
             for (int i = 0; i < NumberOfLines; i++)
             {
-            ListLines[i] = PlayerPrefs.GetString(path + "_" + i.ToString()).ToString();
+                ListLines[i] = PlayerPrefs.GetString(path + "_" + i.ToString()).ToString();
             }
             Debug.Log((NumberOfLines, ListLines));
             if (NumberOfLines > 0)
@@ -194,11 +194,6 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
                     }
                 }
             }
-        }
-        else
-        {
-            SaveToPlayerPrefs(path);
-            Load(path);
         }
         
         // TextReader tr = new StreamReader(path);

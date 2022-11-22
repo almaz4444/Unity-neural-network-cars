@@ -11,17 +11,24 @@ public class MenuManager : MonoBehaviour
     public Transform scrollNetworkPanel;
     public Transform addNetworkButton;
     public AddNN addNeuralNetworkPanel;
+    public Button[] buttons;
 
     public static string selectedNetworkName;
     private int networksCount = 1;
     private List<string> namesNN = new List<string>();
+    private List<GameObject> networksList = new List<GameObject>();
+    private GameObject deleteAcceptPanel;
     
     private void Start()
     {
+        selectedNetworkName = null;
+
         if(!PlayerPrefs.HasKey("BASE_BOT_NN_NAME")) PlayerPrefs.SetString("BASE_BOT_NN_NAME", "Базовый");
-        selectedNetworkName = PlayerPrefs.GetString("BASE_BOT_NN_NAME");
-        Instantiate(networkElementPrefab, scrollNetworkPanel).GetComponent<NeuralNetworkElement>().text.text = PlayerPrefs.GetString("BASE_BOT_NN_NAME");
-        namesNN.Add(selectedNetworkName);
+
+        GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
+        net.GetComponent<NeuralNetworkElement>().text.text = PlayerPrefs.GetString("BASE_BOT_NN_NAME");
+        networksList.Add(net);
+        namesNN.Add(PlayerPrefs.GetString("BASE_BOT_NN_NAME"));
 
         if(PlayerPrefs.HasKey("DONATE"))
         {
@@ -31,8 +38,11 @@ public class MenuManager : MonoBehaviour
                 {
                     if(PlayerPrefs.HasKey(i.ToString() + "_BOT_NN_NAME"))
                     {
-                        Instantiate(networkElementPrefab, scrollNetworkPanel).GetComponent<NeuralNetworkElement>().text.text = PlayerPrefs.GetString(i + "_BOT_NN_NAME");
+                        net = Instantiate(networkElementPrefab, scrollNetworkPanel);
+                        net.GetComponent<NeuralNetworkElement>().text.text = PlayerPrefs.GetString(i + "_BOT_NN_NAME");
+                        networksList.Add(net);
                         namesNN.Add(PlayerPrefs.GetString(i + "_BOT_NN_NAME"));
+
                         networksCount++;
                     }
                 }
@@ -42,6 +52,12 @@ public class MenuManager : MonoBehaviour
 
         addNetworkButton.parent = null;
         addNetworkButton.parent = scrollNetworkPanel;
+    }
+
+    private void Update()
+    {
+        if(selectedNetworkName == null) foreach (Button button in buttons) button.interactable = false;
+        else foreach (Button button in buttons) button.interactable = true;
     }
 
     public void Play()
@@ -59,10 +75,6 @@ public class MenuManager : MonoBehaviour
         {
             addNeuralNetworkPanel.Open();
         }
-        else
-        {
-
-        }
     }
 
     public void SaveNewNetwork(string name)
@@ -77,12 +89,60 @@ public class MenuManager : MonoBehaviour
         if(isAllow)
         {
             PlayerPrefs.SetString((networksCount + 1).ToString() + "_BOT_NN_NAME", name);
-            Instantiate(networkElementPrefab, scrollNetworkPanel).GetComponent<NeuralNetworkElement>().text.text = name;
+
+            GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
+            net.GetComponent<NeuralNetworkElement>().text.text = name;
+            networksList.Add(net);
             namesNN.Add(name);
+
             networksCount++;
-            
             addNetworkButton.parent = null;
             addNetworkButton.parent = scrollNetworkPanel;
+        }
+    }
+
+    public void DeleteNetwork(GameObject deleteAcceptPanel)
+    {
+        deleteAcceptPanel.SetActive(true);
+        this.deleteAcceptPanel = deleteAcceptPanel;
+    }
+
+    public void DeleteNetworkAccepting(bool isDelete)
+    {
+        deleteAcceptPanel.SetActive(false);
+
+        if(isDelete)
+        {
+            for (int i = 0; i < networksCount; i++)
+            {
+                if(selectedNetworkName == namesNN[i])
+                {
+                    Destroy(networksList[i]);
+                    namesNN.RemoveAt(i);
+                    networksList.RemoveAt(i);
+
+                    for (int a = 0; a < 10; a++)
+                    {
+                        if(PlayerPrefs.HasKey(a.ToString() + "_BOT_NN_NAME"))
+                        {
+                            string botNNName = PlayerPrefs.GetString((a).ToString() + "_BOT_NN_NAME");
+                            if(botNNName == selectedNetworkName) PlayerPrefs.DeleteKey(a.ToString() + "_BOT_NN_NAME");
+
+                            string path = a.ToString() + "_BOT_NN";
+                            int num = 0;
+                            while (true)
+                            {
+                                if(PlayerPrefs.HasKey(path + "_" + num.ToString())) PlayerPrefs.DeleteKey(path + "_" + i.ToString());
+                                else break;
+                                num++;
+                            }
+                        }
+                    }
+                    
+                    networksCount--;
+                    selectedNetworkName = null;
+                }
+            }
         }
     }
 }
