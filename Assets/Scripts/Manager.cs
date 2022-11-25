@@ -86,7 +86,7 @@ public class Manager : MonoBehaviour
             }
         }
 
-        if(bots != null)
+        if(bots[0] != null)
         {
             numOfStepsText.text = "Шагов: " + PlayerPrefs.GetInt(InterSceneScript.GetPathWithNetworkName(neuralNetworkName) + "_STEPS").ToString();
             botFitnessText.text = "Fitness: " + bots[followingBot].fitness.ToString();
@@ -165,8 +165,16 @@ public class Manager : MonoBehaviour
         else if (followingBot == populationSize - 1 && where > 0) followingBot = 0;
         else if (followingBot == populationSize - 1 || followingBot == 0) followingBot += where;
         
-        vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
-        vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
+        if(isCameraFollowing)
+        {
+            vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
+            vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
+        }
+        else
+        {
+            vCam2.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].followPos;
+            vCam2.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].lookPos;
+        }
     }
 
     public void ReplaceCameraOffset()

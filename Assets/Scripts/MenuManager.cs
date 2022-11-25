@@ -328,6 +328,7 @@ public class MenuManager : MonoBehaviour
                     string path = InterSceneScript.GetPathWithNetworkName(selectedNetworkName);
                     
                     PlayerPrefs.DeleteKey(path + "_NAME");
+                    PlayerPrefs.DeleteKey(path + "_STEPS");
 
                     int num = 0;
                     while (true)
