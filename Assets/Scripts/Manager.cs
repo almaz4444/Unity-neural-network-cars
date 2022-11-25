@@ -18,6 +18,8 @@ public class Manager : MonoBehaviour
     public Text numOfStepsText;
     public Text botFitnessText;
 
+    public GameObject[] lights;
+
     public int[] layers = new int[3] { 5, 3, 2 };
 
     [Range(0.0001f, 1f)] public float MutationChance = 0.01f;
@@ -89,6 +91,9 @@ public class Manager : MonoBehaviour
             numOfStepsText.text = "Шагов: " + PlayerPrefs.GetInt(InterSceneScript.GetPathWithNetworkName(neuralNetworkName) + "_STEPS").ToString();
             botFitnessText.text = "Fitness: " + bots[followingBot].fitness.ToString();
         }
+
+        if(lights[0].GetComponent<Light>().intensity > 0) for (int i = 1; i < lights.Length; i++) lights[i].SetActive(false);
+        else for (int i = 1; i < lights.Length; i++) lights[i].SetActive(true);
     }
 
     public void InitNetworks()

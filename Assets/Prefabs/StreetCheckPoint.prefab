@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3423100258750030244}
-  m_Layer: 9
+  m_Layer: 3
   m_Name: StreetCheckPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 3985180203547352503}
   - component: {fileID: 4532080143368991905}
   - component: {fileID: 1816867137680056317}
-  m_Layer: 9
+  m_Layer: 3
   m_Name: StreetWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
