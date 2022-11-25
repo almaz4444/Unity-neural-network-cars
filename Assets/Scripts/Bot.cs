@@ -108,6 +108,11 @@ public class Bot : MonoBehaviour
             fitness += 20.0f;
             stop = true;
         }
+        if(collision.gameObject.layer == LayerMask.NameToLayer("CheckPoint") && !stop)
+        {
+            fitness += 0.1f;
+            print(fitness);
+        }
     }
 
     private void OnTriggerEnter(Collider collider)
@@ -116,11 +121,6 @@ public class Bot : MonoBehaviour
         {
             fitness -= 10.0f;
             stop = true;
-        }
-        if(collider.gameObject.layer == LayerMask.NameToLayer("CheckPoint") && !stop)
-        {
-            fitness += 0.1f;
-            print(fitness);
         }
     }
 
