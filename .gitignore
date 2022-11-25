@@ -1,12 +1,23 @@
-/Library
-/Logs
-/Temp
 /.vscode
-/Neural Network_Data
-/Mutation Neural Network_Data
+
+/Logs
+
 /MonoBleedingEdge
+
+/Library
+
+/Temp
+
 /Assets/Save.txt
+
 /Assets/Pre-traned.txt
+
 /Assets/StremingAssets
+
 /Game.apk
+
 /NeuralNetwork.sln
+
+/Neural Network_Data
+
+/Mutation Neural Network_Data
