@@ -7,6 +7,8 @@ public class AddNN : MonoBehaviour
 {
     public MenuManager _mm;
 
+    private bool isNewNetwork = true;
+
 
     public void Open()
     {
@@ -16,7 +18,24 @@ public class AddNN : MonoBehaviour
     public void Close(InputField inputField)
     {
         gameObject.SetActive(false);
-        _mm.SaveNewNetwork(inputField.text);
-        inputField.text = "";
+
+        if(inputField.text != "")
+        {
+            if(isNewNetwork) 
+            {
+                _mm.SaveNewNetwork(inputField.text);
+                inputField.text = "";
+            }
+            else
+            {
+                _mm.SaveInputNetwork(inputField.text);
+                inputField.text = "";
+            }
+        }
+    }
+
+    public void NetworkSwitch(bool where)
+    {
+        isNewNetwork = where;
     }
 }

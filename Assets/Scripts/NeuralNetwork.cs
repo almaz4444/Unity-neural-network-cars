@@ -170,7 +170,6 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
             {
                 ListLines[i] = PlayerPrefs.GetString(path + "_" + i.ToString()).ToString();
             }
-            Debug.Log((NumberOfLines, ListLines));
             if (NumberOfLines > 0)
             {
                 for (int i = 0; i < biases.Length; i++)
@@ -199,7 +198,7 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
 
     public void Save(string path)
     {
-        PlayerPrefs.DeleteAll();
+        InterSceneScript.DeleteNetwork(path);
         int lineNum = 0;
 
         for (int i = 0; i < biases.Length; i++)
@@ -226,15 +225,14 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
 
     public void SaveToPlayerPrefs(string path, string preTrainedNetwork)
     {
-        int NumberOfLines = preTrainedNetwork.Split(new char[] { '\n' }).Length;
+        int NumberOfLines = preTrainedNetwork.Split(new char[] { '\n' }).Length - 1;
         string[] ListLines = new string[NumberOfLines];
-        int index = 1;
-        for (int i = 1; i < NumberOfLines; i++)
+        int index = 0;
+        for (int i = 0; i < NumberOfLines; i++)
         {
-            ListLines[i] = preTrainedNetwork.Split(new char[] { '\n' })[i - 1];
+            ListLines[i] = preTrainedNetwork.Split(new char[] { '\n' })[i];
         }
-        Debug.Log(NumberOfLines);
-        if (new FileInfo("Assets/Save.txt").Length > 0)
+        if (NumberOfLines > 0)
         {
             for (int i = 0; i < biases.Length; i++)
             {
@@ -257,5 +255,6 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
                 }
             }
         }
+        Save(path);
     }
 }

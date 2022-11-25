@@ -109,6 +109,11 @@ public class Bot : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
+        if(collider.gameObject.layer == LayerMask.NameToLayer("Default") && !stop && Manager.training) 
+        {
+            fitness -= 10.0f;
+            stop = true;
+        }
     }
 
 

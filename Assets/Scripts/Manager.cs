@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using Cinemachine;
 
@@ -7,12 +8,14 @@ public class Manager : MonoBehaviour
 {
     [TextArea] public string preTrainedNetwork;
 
-    public bool training = false;
+    public static bool training;
     public float timeFrame = 20;
     public int populationSize;
     public GameObject[] prefabs;
     public Transform[] spawnPoints;
     public CinemachineVirtualCamera vCam;
+    public Text numOfStepsText;
+    public Text botFitnessText;
 
     public int[] layers = new int[3] { 5, 3, 2 };
 
@@ -41,6 +44,13 @@ public class Manager : MonoBehaviour
         {
             for (int i = 0; i < networks.Count; i++) networks[i].SaveToPlayerPrefs("BASE_BOT_NN", preTrainedNetwork);
         }
+
+        string path = InterSceneScript.GetPathWithNetworkName(neuralNetworkName);
+        if(!PlayerPrefs.HasKey(path))
+        {
+            if(neuralNetworkName == "Базовый") PlayerPrefs.SetInt("BASE_BOT_NN_STEPS", 1263);
+            else PlayerPrefs.SetInt(path, 0);
+        }
     }
 
     private void Update()
@@ -63,12 +73,15 @@ public class Manager : MonoBehaviour
                 }
             }
         }
+
+        numOfStepsText.text = "Шагов: " + PlayerPrefs.GetInt(InterSceneScript.GetPathWithNetworkName(neuralNetworkName)).ToString();
+        botFitnessText.text = "Fitness: " + bots[followingBot].fitness.ToString();
     }
 
     public void InitNetworks()
     {
         NeuralNetwork net = new NeuralNetwork(layers);
-        net.Load(neuralNetworkName);
+        net.Load(InterSceneScript.GetPathWithNetworkName(neuralNetworkName));
 
         for (int i = 0; i < populationSize; i++) 
         {
@@ -88,6 +101,9 @@ public class Manager : MonoBehaviour
             }
 
             SortNetworks();
+
+            string path = InterSceneScript.GetPathWithNetworkName(neuralNetworkName);
+            PlayerPrefs.SetInt(path, PlayerPrefs.GetInt(path) + 1);
         }
         
         for (int i = 0; i < populationSize; i++)
@@ -108,8 +124,7 @@ public class Manager : MonoBehaviour
             bots[i].UpdateFitness();
         }
         networks.Sort();
-        print((networks[populationSize - 1], networks.Count));
-        networks[populationSize - 1].Save(neuralNetworkName);
+        networks[populationSize - 1].Save(InterSceneScript.GetPathWithNetworkName(neuralNetworkName));
         for (int i = 0; i < populationSize / 2; i++)
         {
             networks[i] = networks[i + populationSize / 2].copy(new NeuralNetwork(layers));
