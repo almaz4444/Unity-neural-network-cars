@@ -9,6 +9,7 @@ public class SceneTransition : MonoBehaviour
     public Text loadingText;
     public Image loadingImage;
     public bool isInput;
+    public bool isActive = true;
 
     private static SceneTransition instance;
 
@@ -29,6 +30,7 @@ public class SceneTransition : MonoBehaviour
             loadingText.text = Mathf.Round(progress * 100).ToString() + "%";
             loadingImage.fillAmount = progress;
         }
+        else gameObject.SetActive(isActive);
     }
 
     public static void SwitchToScene(string nameScene)

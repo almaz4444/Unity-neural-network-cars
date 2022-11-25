@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Bot : MonoBehaviour
 {
+    public Transform followPos;
+    public Transform lookPos;
+
     public LayerMask raycastMaskWalls;
 
     public Vector3 rayStartPosition = new Vector3(0, 0, 0);
@@ -52,7 +55,7 @@ public class Bot : MonoBehaviour
                     input[i] = 0;
                 }
             }
-            if (GetComponent<Rigidbody>().velocity.magnitude > 0.5f) fitness += 0.00001f;
+            if (GetComponent<Rigidbody>().velocity.magnitude < 0.5f) fitness -= 0.001f;
 
             if (transform.position.y <= 50)
             {
@@ -113,6 +116,11 @@ public class Bot : MonoBehaviour
         {
             fitness -= 10.0f;
             stop = true;
+        }
+        if(collider.gameObject.layer == LayerMask.NameToLayer("CheckPoint") && !stop)
+        {
+            fitness += 0.1f;
+            print(fitness);
         }
     }
 

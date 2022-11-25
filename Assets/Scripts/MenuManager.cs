@@ -61,6 +61,8 @@ public class MenuManager : MonoBehaviour
 
     private void Update()
     {
+        if(Input.GetKey(KeyCode.Escape)) Application.Quit();
+        if(Input.GetKey(KeyCode.Delete)) PlayerPrefs.DeleteAll();
         if(selectedNetworkName == null)
         {
             foreach (Button button in buttons) button.interactable = false;
@@ -158,6 +160,33 @@ public class MenuManager : MonoBehaviour
         } 
     }
 
+    public void CopyNeuralNetwork()
+    {
+        string pathCopingNetwork = InterSceneScript.GetPathWithNetworkName(selectedNetworkName);
+        string pathCopedNetwork = (networksCount + 1).ToString() + "_BOT_NN";
+        string name = selectedNetworkName + " (копия)";
+
+        int i = 0;
+        while (true)
+        {
+            if(PlayerPrefs.HasKey(pathCopingNetwork + "_" + i)) PlayerPrefs.SetString(pathCopedNetwork + "_" + i.ToString(), PlayerPrefs.GetString(pathCopingNetwork + "_" + i));
+            else break;
+            i++;
+        }
+
+        PlayerPrefs.SetString(pathCopedNetwork + "_NAME", name);
+
+        GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
+        net.GetComponent<NeuralNetworkElement>().text.text = name;
+        networksList.Add(net);
+        namesNN.Add(PlayerPrefs.GetString(name));
+        networksCount++;
+        
+        addNetworkButton.parent = null;
+        addNetworkButton.parent = scrollNetworkPanel;
+        selectedNetworkName = name;
+    }
+
     public void SaveNewNetwork(string name)
     {
         bool isAllow = true;
@@ -168,7 +197,7 @@ public class MenuManager : MonoBehaviour
         }
 
         if(isAllow)
-        {
+        {                    
             PlayerPrefs.SetString((networksCount + 1).ToString() + "_BOT_NN_NAME", name);
 
             GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
@@ -303,7 +332,7 @@ public class MenuManager : MonoBehaviour
                     int num = 0;
                     while (true)
                     {
-                        if(PlayerPrefs.HasKey(path + "_" + num.ToString())) PlayerPrefs.DeleteKey(path + "_" + i.ToString());
+                        if(PlayerPrefs.HasKey(path + "_" + num.ToString())) PlayerPrefs.DeleteKey(path + "_" + num.ToString());
                         else break;
                         num++;
                     }

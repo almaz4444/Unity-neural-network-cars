@@ -13,7 +13,8 @@ public class Manager : MonoBehaviour
     public int populationSize;
     public GameObject[] prefabs;
     public Transform[] spawnPoints;
-    public CinemachineVirtualCamera vCam;
+    public GameObject vCam1;
+    public GameObject vCam2;
     public Text numOfStepsText;
     public Text botFitnessText;
 
@@ -28,6 +29,7 @@ public class Manager : MonoBehaviour
     public List<NeuralNetwork> networks = new List<NeuralNetwork>(8);
     public List<Bot> bots = new List<Bot>(8);
     private int followingBot = 0;
+    private bool isCameraFollowing = true;
     private string neuralNetworkName;
 
     private void Start()
@@ -68,14 +70,25 @@ public class Manager : MonoBehaviour
                     bot.network = networks[i];
                     bots[i] = bot;
                     
-                    vCam.Follow = bots[followingBot].transform;
-                    vCam.LookAt = bots[followingBot].transform;
+                    if(isCameraFollowing)
+                    {
+                        vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
+                        vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
+                    }
+                    else
+                    {
+                        vCam2.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].followPos;
+                        vCam2.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].lookPos;
+                    }
                 }
             }
         }
 
-        numOfStepsText.text = "Шагов: " + PlayerPrefs.GetInt(InterSceneScript.GetPathWithNetworkName(neuralNetworkName)).ToString();
-        botFitnessText.text = "Fitness: " + bots[followingBot].fitness.ToString();
+        if(bots != null)
+        {
+            numOfStepsText.text = "Шагов: " + PlayerPrefs.GetInt(InterSceneScript.GetPathWithNetworkName(neuralNetworkName) + "_STEPS").ToString();
+            botFitnessText.text = "Fitness: " + bots[followingBot].fitness.ToString();
+        }
     }
 
     public void InitNetworks()
@@ -102,7 +115,7 @@ public class Manager : MonoBehaviour
 
             SortNetworks();
 
-            string path = InterSceneScript.GetPathWithNetworkName(neuralNetworkName);
+            string path = InterSceneScript.GetPathWithNetworkName(neuralNetworkName) + "_STEPS";
             PlayerPrefs.SetInt(path, PlayerPrefs.GetInt(path) + 1);
         }
         
@@ -113,8 +126,16 @@ public class Manager : MonoBehaviour
             bots[i] = bot;
         }
 
-        vCam.Follow = bots[followingBot].transform;
-        vCam.LookAt = bots[followingBot].transform;
+        if(isCameraFollowing)
+        {
+            vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
+            vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
+        }
+        else
+        {
+            vCam2.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].followPos;
+            vCam2.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].lookPos;
+        }
     }
 
     public void SortNetworks()
@@ -139,7 +160,31 @@ public class Manager : MonoBehaviour
         else if (followingBot == populationSize - 1 && where > 0) followingBot = 0;
         else if (followingBot == populationSize - 1 || followingBot == 0) followingBot += where;
         
-        vCam.Follow = bots[followingBot].transform;
-        vCam.LookAt = bots[followingBot].transform;
+        vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
+        vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
+    }
+
+    public void ReplaceCameraOffset()
+    {
+        if(isCameraFollowing)
+        {
+            vCam1.SetActive(false);
+            vCam2.SetActive(true);
+
+            vCam2.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].followPos;
+            vCam2.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].lookPos;
+
+            isCameraFollowing = false;
+        }
+        else
+        {
+            vCam1.SetActive(true);
+            vCam2.SetActive(false);
+
+            vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
+            vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
+
+            isCameraFollowing = true;
+        }
     }
 }
