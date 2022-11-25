@@ -1,5 +1,12 @@
-/Assembly-CSharp.csproj
 /Library
 /Logs
 /Temp
 /.vscode
+/Neural Network_Data
+/Mutation Neural Network_Data
+/MonoBleedingEdge
+/Assets/Save.txt
+/Assets/Pre-traned.txt
+/Assets/StremingAssets
+/Game.apk
+/NeuralNetwork.sln
