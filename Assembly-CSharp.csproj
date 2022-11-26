@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\InterSceneScript.cs" />
      <Compile Include="Assets\Scripts\EasySuspension.cs" />
      <Compile Include="Assets\Scripts\AddNN.cs" />
+     <Compile Include="Assets\Scripts\ErrorPanel.cs" />
      <None Include="Assets\Save.txt" />
      <None Include="Assets\Pre-trained.txt" />
      <None Include="Assets\POLYGON city pack\Read_me.txt" />

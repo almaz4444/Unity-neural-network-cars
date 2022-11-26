@@ -937,7 +937,7 @@ MonoBehaviour:
   radusRay: 20
   startProtection: 1
   rayDistance: 25
-  drawRays: 1
+  drawRays: 0
   network: {fileID: 0}
   fitness: 0
   stop: 0

@@ -6,8 +6,6 @@ using Cinemachine;
 
 public class Manager : MonoBehaviour
 {
-    [TextArea] public string preTrainedNetwork;
-
     public static bool training;
     public float timeFrame = 20;
     public int populationSize;
@@ -20,7 +18,7 @@ public class Manager : MonoBehaviour
 
     public GameObject[] lights;
 
-    public int[] layers = new int[3] { 5, 3, 2 };
+    public static int[] layers;
 
     [Range(0.0001f, 1f)] public float MutationChance = 0.01f;
 
@@ -36,6 +34,8 @@ public class Manager : MonoBehaviour
 
     private void Start()
     {
+        layers = Bot.layers;
+
         if(PlayerPrefs.GetInt("TRANING") == 0) training = false;
         else training = true;
         neuralNetworkName = PlayerPrefs.GetString("SELECTED_BOT_NN");
@@ -43,11 +43,6 @@ public class Manager : MonoBehaviour
         InitNetworks();
         if (training) InvokeRepeating("CreateBots", 0.2f, timeFrame);
         else CreateBots();
-
-        if(!PlayerPrefs.HasKey("BASE_BOT_NN_0"))
-        {
-            for (int i = 0; i < networks.Count; i++) networks[i].SaveToPlayerPrefs("BASE_BOT_NN", preTrainedNetwork);
-        }
 
         string path = InterSceneScript.GetPathWithNetworkName(neuralNetworkName);
         if(!PlayerPrefs.HasKey(path))

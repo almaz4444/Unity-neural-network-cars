@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour
 {
+    [TextArea] public string preTrainedNetwork;
+    public int radusRay = 20;
+    public int maxNeuralNetworksCount;
+
     public GameObject networkElementPrefab;
     public GameObject loadingPanel;
     public Toggle traningToggle;
@@ -18,27 +22,30 @@ public class MenuManager : MonoBehaviour
     public static List<string> namesNN;
     public static List<GameObject> networksList;
     private GameObject deleteAcceptPanel;
-    
-    public int[] layers = new int[3] { 5, 3, 2 };
-    private float[][] neurons;
-    private float[][] biases;
-    private float[][][] weights;
+
     
     private void Start()
     {
+        InterSceneScript.InitNetwork(radusRay);
+        InterSceneScript.maxNeuralNetworksCount = maxNeuralNetworksCount;
+
         selectedNetworkName = null;
         networksCount = 1;
         namesNN = new List<string>();
         networksList = new List<GameObject>();
 
-        if(!PlayerPrefs.HasKey("BASE_BOT_NN_NAME")) PlayerPrefs.SetString("BASE_BOT_NN_NAME", "Базовый");
+        if(!PlayerPrefs.HasKey("BASE_BOT_NN_NAME") || PlayerPrefs.HasKey("BASE_BOT_NN_0"))
+        {
+            PlayerPrefs.SetString("BASE_BOT_NN_NAME", "Базовый");
+            InterSceneScript.SaveToPlayerPrefs("BASE_BOT_NN", preTrainedNetwork);
+        }
 
         GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
         net.GetComponent<NeuralNetworkElement>().text.text = PlayerPrefs.GetString("BASE_BOT_NN_NAME");
         networksList.Add(net);
         namesNN.Add(PlayerPrefs.GetString("BASE_BOT_NN_NAME"));
 
-        for (int i = 0; i <= 10; i++)
+        for (int i = 0; i <= InterSceneScript.maxNeuralNetworksCount; i++)
         {
             if(PlayerPrefs.HasKey(i.ToString() + "_BOT_NN_NAME"))
             {
@@ -53,10 +60,6 @@ public class MenuManager : MonoBehaviour
 
         addNetworkButton.parent = null;
         addNetworkButton.parent = scrollNetworkPanel;
-
-        InitNeurons();
-        InitBiases();
-        InitWeights();
     }
 
     private void Update()
@@ -80,52 +83,6 @@ public class MenuManager : MonoBehaviour
             traningToggle.interactable = false;
             traningToggle.isOn = false;
         }
-    }
-
-    private void InitNeurons()
-    {
-        List<float[]> neuronsList = new List<float[]>();
-        for (int i = 0; i < layers.Length; i++)
-        {
-            neuronsList.Add(new float[layers[i]]);
-        }
-        neurons = neuronsList.ToArray();
-    }
-
-    private void InitBiases()
-    {
-        List<float[]> biasList = new List<float[]>();
-        for (int i = 0; i < layers.Length; i++)
-        {
-            float[] bias = new float[layers[i]];
-            for (int j = 0; j < layers[i]; j++)
-            {
-                bias[j] = UnityEngine.Random.Range(-0.5f, 0.5f);
-            }
-            biasList.Add(bias);
-        }
-        biases = biasList.ToArray();
-    }
-
-    private void InitWeights()
-    {
-        List<float[][]> weightsList = new List<float[][]>();
-        for (int i = 1; i < layers.Length; i++)
-        {
-            List<float[]> layerWeightsList = new List<float[]>();
-            int neuronsInPreviousLayer = layers[i - 1];
-            for (int j = 0; j < neurons[i].Length; j++)
-            {
-                float[] neuronWeights = new float[neuronsInPreviousLayer];
-                for (int k = 0; k < neuronsInPreviousLayer; k++)
-                {
-                    neuronWeights[k] = UnityEngine.Random.Range(-0.5f, 0.5f);
-                }
-                layerWeightsList.Add(neuronWeights);
-            }
-            weightsList.Add(layerWeightsList.ToArray());
-        }
-        weights = weightsList.ToArray();
     }
 
     public void Play()
@@ -189,115 +146,58 @@ public class MenuManager : MonoBehaviour
 
     public void SaveNewNetwork(string name)
     {
-        bool isAllow = true;
-
-        foreach (string nameNN in namesNN)
+        if(namesNN.Count < InterSceneScript.maxNeuralNetworksCount)
         {
-            if(nameNN == name) isAllow = false;
-        }
+            bool isAllow = true;
 
-        if(isAllow)
-        {                    
-            PlayerPrefs.SetString((networksCount + 1).ToString() + "_BOT_NN_NAME", name);
+            foreach (string nameNN in namesNN)
+            {
+                if(nameNN == name) isAllow = false;
+            }
 
-            GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
-            net.GetComponent<NeuralNetworkElement>().text.text = name;
-            networksList.Add(net);
-            namesNN.Add(name);
+            if(isAllow)
+            {                    
+                PlayerPrefs.SetString((networksCount + 1).ToString() + "_BOT_NN_NAME", name);
 
-            networksCount++;
-            addNetworkButton.parent = null;
-            addNetworkButton.parent = scrollNetworkPanel;
+                GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
+                net.GetComponent<NeuralNetworkElement>().text.text = name;
+                networksList.Add(net);
+                namesNN.Add(name);
+                networksCount++;
+
+                addNetworkButton.parent = null;
+                addNetworkButton.parent = scrollNetworkPanel;
+            }
         }
     }
 
     public void SaveInputNetwork(string network)
     {
-        string path = (networksCount + 1).ToString() + "_BOT_NN";
-        string neuralNetworkName = "Нейросеть " + (networksCount + 1).ToString();
-
-        bool isAllow = true;
-
-        for (int i = 0; i < namesNN.Count; i++)
+        if(namesNN.Count < InterSceneScript.maxNeuralNetworksCount)
         {
-            if(namesNN[i] == neuralNetworkName) neuralNetworkName = "Нейросеть " + (networksCount + i).ToString();
-        }
-        
-        SaveToPlayerPrefs(path, network);
-        
-        GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
-        net.GetComponent<NeuralNetworkElement>().text.text = neuralNetworkName;
-        networksList.Add(net);
-        namesNN.Add(PlayerPrefs.GetString(neuralNetworkName));
+            string path = (networksCount + 1).ToString() + "_BOT_NN";
+            string neuralNetworkName = "Нейросеть " + (networksCount + 1).ToString();
 
-        PlayerPrefs.SetString((networksCount + 1).ToString() + "_BOT_NN_NAME", neuralNetworkName);
-        networksCount++;
-        
-        addNetworkButton.parent = null;
-        addNetworkButton.parent = scrollNetworkPanel;
-    }
+            bool isAllow = true;
 
-    private void Save(string path)
-    {
-        print(path);
-        PlayerPrefs.DeleteAll();
-        int lineNum = 0;
-
-        for (int i = 0; i < biases.Length; i++)
-        {
-            for (int j = 0; j < biases[i].Length; j++)
+            for (int i = 0; i < namesNN.Count; i++)
             {
-                PlayerPrefs.SetString(path + "_" + lineNum.ToString(), biases[i][j].ToString());
-                lineNum++;
+                if(namesNN[i] == neuralNetworkName) neuralNetworkName = "Нейросеть " + (networksCount + i).ToString();
             }
-        }
+            
+            InterSceneScript.SaveToPlayerPrefs(path, network);
+            
+            GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
+            net.GetComponent<NeuralNetworkElement>().text.text = neuralNetworkName;
+            networksList.Add(net);
+            namesNN.Add(PlayerPrefs.GetString(neuralNetworkName));
 
-        for (int i = 0; i < weights.Length; i++)
-        {
-            for (int j = 0; j < weights[i].Length; j++)
-            {
-                for (int k = 0; k < weights[i][j].Length; k++)
-                {
-                    PlayerPrefs.SetString(path + "_" + lineNum.ToString(), weights[i][j][k].ToString());
-                    lineNum++;
-                }
-            }
+            PlayerPrefs.SetString((networksCount + 1).ToString() + "_BOT_NN_NAME", neuralNetworkName);
+            networksCount++;
+            
+            addNetworkButton.parent = null;
+            addNetworkButton.parent = scrollNetworkPanel;
         }
-    }
-
-    private void SaveToPlayerPrefs(string path, string preTrainedNetwork)
-    {
-        int NumberOfLines = preTrainedNetwork.Split(new char[] { '\n' }).Length - 1;
-        string[] ListLines = new string[NumberOfLines];
-        int index = 0;
-        for (int i = 0; i < NumberOfLines; i++)
-        {
-            ListLines[i] = preTrainedNetwork.Split(new char[] { '\n' })[i];
-        }
-        if (NumberOfLines > 0)
-        {
-            for (int i = 0; i < biases.Length; i++)
-            {
-                for (int j = 0; j < biases[i].Length; j++)
-                {
-                    biases[i][j] = float.Parse(ListLines[index]);
-                    index++;
-                }
-            }
-
-            for (int i = 0; i < weights.Length; i++)
-            {
-                for (int j = 0; j < weights[i].Length; j++)
-                {
-                    for (int k = 0; k < weights[i][j].Length; k++)
-                    {
-                        weights[i][j][k] = float.Parse(ListLines[index]);
-                        index++;
-                    }
-                }
-            }
-        }
-        Save(path);
     }
 
     public void DeleteNetwork(GameObject deleteAcceptPanel)
@@ -356,7 +256,6 @@ public class MenuManager : MonoBehaviour
 
         string path = InterSceneScript.GetPathWithNetworkName(selectedNetworkName);
         string neuralNetworkString = LoadAndReturnNeuralNetwork(path);
-        print(neuralNetworkString);
         
         if(neuralNetworkString != "") new NativeShare().SetSubject("Моя нейронная сеть.").SetText(neuralNetworkString).Share();
     }

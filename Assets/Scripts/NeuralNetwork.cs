@@ -222,39 +222,4 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
             }
         }
     }
-
-    public void SaveToPlayerPrefs(string path, string preTrainedNetwork)
-    {
-        int NumberOfLines = preTrainedNetwork.Split(new char[] { '\n' }).Length - 1;
-        string[] ListLines = new string[NumberOfLines];
-        int index = 0;
-        for (int i = 0; i < NumberOfLines; i++)
-        {
-            ListLines[i] = preTrainedNetwork.Split(new char[] { '\n' })[i];
-        }
-        if (NumberOfLines > 0)
-        {
-            for (int i = 0; i < biases.Length; i++)
-            {
-                for (int j = 0; j < biases[i].Length; j++)
-                {
-                    biases[i][j] = float.Parse(ListLines[index]);
-                    index++;
-                }
-            }
-
-            for (int i = 0; i < weights.Length; i++)
-            {
-                for (int j = 0; j < weights[i].Length; j++)
-                {
-                    for (int k = 0; k < weights[i][j].Length; k++)
-                    {
-                        weights[i][j][k] = float.Parse(ListLines[index]);
-                        index++;
-                    }
-                }
-            }
-        }
-        Save(path);
-    }
 }

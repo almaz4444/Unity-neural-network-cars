@@ -23,13 +23,13 @@ public class AddNN : MonoBehaviour
         {
             if(isNewNetwork) 
             {
-                _mm.SaveNewNetwork(inputField.text);
                 inputField.text = "";
+                _mm.SaveNewNetwork(inputField.text);
             }
             else
             {
-                _mm.SaveInputNetwork(inputField.text);
                 inputField.text = "";
+                _mm.SaveInputNetwork(inputField.text + "\n");
             }
         }
     }

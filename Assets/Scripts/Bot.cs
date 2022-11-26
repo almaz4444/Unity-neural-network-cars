@@ -11,33 +11,40 @@ public class Bot : MonoBehaviour
     public LayerMask raycastMaskWalls;
 
     public Vector3 rayStartPosition = new Vector3(0, 0, 0);
-    public int radusRay = 20;
     public float startProtection = 1.0f;
     public float rayDistance = 20.0f;
     public bool drawRays = false;
 
-    private float[] input;
+    public static int[] layers;
+    public static float[] input;
     public NeuralNetwork network;
 
     public float fitness;
     public bool stop = false;
 
+    public static int radiusRay;
     private float timeOldRotateWheels = 0;
     private float oldRotateWheels = 0;
+
+    public static void Awake(int rRay)
+    {
+        radiusRay = rRay;
+        layers = new int[3] { 360/radiusRay, Mathf.RoundToInt(360/radiusRay*15/18), 2 };
+        input = new float[layers[0]];
+    }
 
     private void Start()
     {
         transform.parent = null;
-        input = new float[360/radusRay];
     }
 
     private void FixedUpdate()
     {
         if(!stop)
         {
-            for (int i = 0; i < 360/radusRay; i++)
+            for (int i = 0; i < 360/radiusRay; i++)
             {
-                Vector3 newVector = Quaternion.AngleAxis(i * radusRay, new Vector3(0, 1, 0)) * transform.right;
+                Vector3 newVector = Quaternion.AngleAxis(i * radiusRay, new Vector3(0, 1, 0)) * transform.right;
                 RaycastHit hit;
                 Ray Ray = new Ray(transform.position + rayStartPosition, newVector);
 
