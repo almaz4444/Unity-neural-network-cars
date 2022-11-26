@@ -6,32 +6,29 @@ using UnityEngine;
 public class AddNN : MonoBehaviour
 {
     public MenuManager _mm;
+    public ErrorPanel errorPanel;
 
     private bool isNewNetwork = true;
 
 
-    public void Open()
-    {
-        gameObject.SetActive(true);
-    }
-
     public void Close(InputField inputField)
     {
-        gameObject.SetActive(false);
-
-        if(inputField.text != "")
+        if(inputField.text.Replace(" ", "") != "")
         {
             if(isNewNetwork) 
             {
+                string text = inputField.text;
                 inputField.text = "";
-                _mm.SaveNewNetwork(inputField.text);
+                _mm.SaveNewNetwork(text);
             }
             else
             {
+                string text = inputField.text;
                 inputField.text = "";
-                _mm.SaveInputNetwork(inputField.text + "\n");
+                _mm.SaveInputNetwork(text + "\n");
             }
         }
+        else errorPanel.OpenErrorPanel("Название нейросети не должно быть пустым или содержать только пробелы!");
     }
 
     public void NetworkSwitch(bool where)

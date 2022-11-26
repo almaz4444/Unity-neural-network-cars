@@ -14,14 +14,13 @@ public class MenuManager : MonoBehaviour
     public Toggle traningToggle;
     public Transform scrollNetworkPanel;
     public Transform addNetworkButton;
-    public AddNN addNeuralNetworkPanel;
+    public ErrorPanel errorPanel;
     public Button[] buttons;
 
     public static string selectedNetworkName;
     public static int networksCount;
     public static List<string> namesNN;
     public static List<GameObject> networksList;
-    private GameObject deleteAcceptPanel;
 
     
     private void Start()
@@ -45,8 +44,9 @@ public class MenuManager : MonoBehaviour
         networksList.Add(net);
         namesNN.Add(PlayerPrefs.GetString("BASE_BOT_NN_NAME"));
 
-        for (int i = 0; i <= InterSceneScript.maxNeuralNetworksCount; i++)
+        for (int i = 0; i < InterSceneScript.maxNeuralNetworksCount + 1; i++)
         {
+            print((PlayerPrefs.HasKey(i.ToString() + "_BOT_NN_NAME"), i.ToString() + "_BOT_NN_NAME"));
             if(PlayerPrefs.HasKey(i.ToString() + "_BOT_NN_NAME"))
             {
                 net = Instantiate(networkElementPrefab, scrollNetworkPanel);
@@ -95,14 +95,6 @@ public class MenuManager : MonoBehaviour
         SceneTransition.SwitchToScene("Game");
     }
 
-    public void AddNewNetwork()
-    {
-        if(PlayerPrefs.GetString("DONATE") == "default" && networksCount <= 5)
-        {
-            addNeuralNetworkPanel.Open();
-        }
-    }
-
     public void RenameNeuralNetwork(InputField name)
     {
         PlayerPrefs.SetString(InterSceneScript.GetPathWithNetworkName(selectedNetworkName), name.text);
@@ -119,34 +111,38 @@ public class MenuManager : MonoBehaviour
 
     public void CopyNeuralNetwork()
     {
-        string pathCopingNetwork = InterSceneScript.GetPathWithNetworkName(selectedNetworkName);
-        string pathCopedNetwork = (networksCount + 1).ToString() + "_BOT_NN";
-        string name = selectedNetworkName + " (копия)";
-
-        int i = 0;
-        while (true)
+        if(namesNN.Count < InterSceneScript.maxNeuralNetworksCount + 1)
         {
-            if(PlayerPrefs.HasKey(pathCopingNetwork + "_" + i)) PlayerPrefs.SetString(pathCopedNetwork + "_" + i.ToString(), PlayerPrefs.GetString(pathCopingNetwork + "_" + i));
-            else break;
-            i++;
+            string pathCopingNetwork = InterSceneScript.GetPathWithNetworkName(selectedNetworkName);
+            string pathCopedNetwork = (networksCount - 1).ToString() + "_BOT_NN";
+            string name = selectedNetworkName + " (копия)";
+
+            int i = 0;
+            while (true)
+            {
+                if(PlayerPrefs.HasKey(pathCopingNetwork + "_" + i)) PlayerPrefs.SetString(pathCopedNetwork + "_" + i.ToString(), PlayerPrefs.GetString(pathCopingNetwork + "_" + i));
+                else break;
+                i++;
+            }
+
+            PlayerPrefs.SetString(pathCopedNetwork + "_NAME", name);
+
+            GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
+            net.GetComponent<NeuralNetworkElement>().text.text = name;
+            networksList.Add(net);
+            namesNN.Add(PlayerPrefs.GetString(name));
+            networksCount++;
+            
+            addNetworkButton.parent = null;
+            addNetworkButton.parent = scrollNetworkPanel;
+            selectedNetworkName = name;
         }
-
-        PlayerPrefs.SetString(pathCopedNetwork + "_NAME", name);
-
-        GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
-        net.GetComponent<NeuralNetworkElement>().text.text = name;
-        networksList.Add(net);
-        namesNN.Add(PlayerPrefs.GetString(name));
-        networksCount++;
-        
-        addNetworkButton.parent = null;
-        addNetworkButton.parent = scrollNetworkPanel;
-        selectedNetworkName = name;
+        else errorPanel.OpenErrorPanel("Превышен лимит дополнительных нейросетей (" + maxNeuralNetworksCount.ToString() + ")!");
     }
 
     public void SaveNewNetwork(string name)
     {
-        if(namesNN.Count < InterSceneScript.maxNeuralNetworksCount)
+        if(namesNN.Count < InterSceneScript.maxNeuralNetworksCount + 1)
         {
             bool isAllow = true;
 
@@ -156,8 +152,9 @@ public class MenuManager : MonoBehaviour
             }
 
             if(isAllow)
-            {                    
-                PlayerPrefs.SetString((networksCount + 1).ToString() + "_BOT_NN_NAME", name);
+            {            
+                print((name, (networksCount - 1).ToString() + "_BOT_NN_NAME"));      
+                PlayerPrefs.SetString((networksCount - 1).ToString() + "_BOT_NN_NAME", name);
 
                 GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
                 net.GetComponent<NeuralNetworkElement>().text.text = name;
@@ -168,14 +165,16 @@ public class MenuManager : MonoBehaviour
                 addNetworkButton.parent = null;
                 addNetworkButton.parent = scrollNetworkPanel;
             }
+            else errorPanel.OpenErrorPanel("Нейросеть с данным названием уже существует!\nПридумайте другое название.");
         }
+        else errorPanel.OpenErrorPanel("Превышен лимит дополнительных нейросетей (" + maxNeuralNetworksCount.ToString() + ")!");
     }
 
     public void SaveInputNetwork(string network)
     {
-        if(namesNN.Count < InterSceneScript.maxNeuralNetworksCount)
+        if(namesNN.Count < InterSceneScript.maxNeuralNetworksCount + 1)
         {
-            string path = (networksCount + 1).ToString() + "_BOT_NN";
+            string path = (networksCount - 1).ToString() + "_BOT_NN";
             string neuralNetworkName = "Нейросеть " + (networksCount + 1).ToString();
 
             bool isAllow = true;
@@ -185,25 +184,25 @@ public class MenuManager : MonoBehaviour
                 if(namesNN[i] == neuralNetworkName) neuralNetworkName = "Нейросеть " + (networksCount + i).ToString();
             }
             
-            InterSceneScript.SaveToPlayerPrefs(path, network);
+            try { InterSceneScript.SaveToPlayerPrefs(path, network); }
+            catch
+            {
+                errorPanel.OpenErrorPanel("Похоже вы ввели не модель нейросети, проверьте её и попробуйте ещё раз.");
+                return;
+            }
             
             GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
             net.GetComponent<NeuralNetworkElement>().text.text = neuralNetworkName;
             networksList.Add(net);
             namesNN.Add(PlayerPrefs.GetString(neuralNetworkName));
 
-            PlayerPrefs.SetString((networksCount + 1).ToString() + "_BOT_NN_NAME", neuralNetworkName);
+            PlayerPrefs.SetString((networksCount - 1).ToString() + "_BOT_NN_NAME", neuralNetworkName);
             networksCount++;
             
             addNetworkButton.parent = null;
             addNetworkButton.parent = scrollNetworkPanel;
         }
-    }
-
-    public void DeleteNetwork(GameObject deleteAcceptPanel)
-    {
-        deleteAcceptPanel.SetActive(true);
-        this.deleteAcceptPanel = deleteAcceptPanel;
+        else errorPanel.OpenErrorPanel("Превышен лимит дополнительных нейросетей (" + maxNeuralNetworksCount.ToString() + ")!");
     }
 
     public void SelectNetworkNameToNull()
@@ -213,8 +212,6 @@ public class MenuManager : MonoBehaviour
 
     public void DeleteNetworkAccepting(bool isDelete)
     {
-        deleteAcceptPanel.SetActive(false);
-
         if(isDelete)
         {
             for (int i = 0; i < networksCount; i++)

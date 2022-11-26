@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class ErrorPanel : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Text errorText;
 
-    // Update is called once per frame
-    void Update()
+
+    public void OpenErrorPanel(string error)
     {
+        errorText.text = error;
         
+        gameObject.SetActive(true);
     }
 }
