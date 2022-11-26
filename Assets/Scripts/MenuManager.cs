@@ -46,7 +46,6 @@ public class MenuManager : MonoBehaviour
 
         for (int i = 0; i < InterSceneScript.maxNeuralNetworksCount + 1; i++)
         {
-            print((PlayerPrefs.HasKey(i.ToString() + "_BOT_NN_NAME"), i.ToString() + "_BOT_NN_NAME"));
             if(PlayerPrefs.HasKey(i.ToString() + "_BOT_NN_NAME"))
             {
                 net = Instantiate(networkElementPrefab, scrollNetworkPanel);
@@ -65,7 +64,7 @@ public class MenuManager : MonoBehaviour
     private void Update()
     {
         if(Input.GetKey(KeyCode.Escape)) Application.Quit();
-        if(Input.GetKey(KeyCode.Delete)) PlayerPrefs.DeleteAll();
+
         if(selectedNetworkName == null)
         {
             foreach (Button button in buttons) button.interactable = false;
@@ -97,7 +96,8 @@ public class MenuManager : MonoBehaviour
 
     public void RenameNeuralNetwork(InputField name)
     {
-        PlayerPrefs.SetString(InterSceneScript.GetPathWithNetworkName(selectedNetworkName), name.text);
+        PlayerPrefs.SetString(InterSceneScript.GetPathWithNetworkName(selectedNetworkName) + "_NAME", name.text.ToString());
+        
         for (int i = 0; i < networksList.Count; i++)
         {
             if(networksList[i].GetComponent<NeuralNetworkElement>().text.text == selectedNetworkName)
@@ -152,8 +152,7 @@ public class MenuManager : MonoBehaviour
             }
 
             if(isAllow)
-            {            
-                print((name, (networksCount - 1).ToString() + "_BOT_NN_NAME"));      
+            {              
                 PlayerPrefs.SetString((networksCount - 1).ToString() + "_BOT_NN_NAME", name);
 
                 GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
@@ -255,6 +254,7 @@ public class MenuManager : MonoBehaviour
         string neuralNetworkString = LoadAndReturnNeuralNetwork(path);
         
         if(neuralNetworkString != "") new NativeShare().SetSubject("Моя нейронная сеть.").SetText(neuralNetworkString).Share();
+        else errorPanel.OpenErrorPanel("Невозможно отправить пустую модель!\nОбучите её и попробуйте снова.");
     }
 
     private string LoadAndReturnNeuralNetwork(string path)
@@ -272,5 +272,29 @@ public class MenuManager : MonoBehaviour
             else break;
         }
         return neuralNetworkString;
+    }
+
+    public void DeleteAll()
+    {
+        for (int i = 0; i < networksList.Count; i++)
+        {
+            Destroy(networksList[i]);
+        }
+
+        PlayerPrefs.DeleteAll();
+        namesNN = new List<string>();
+        networksList = new List<GameObject>();
+        selectedNetworkName = null;
+        networksCount = 1;
+
+        PlayerPrefs.SetString("BASE_BOT_NN_NAME", "Базовый");
+        InterSceneScript.SaveToPlayerPrefs("BASE_BOT_NN", preTrainedNetwork);
+        GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
+        net.GetComponent<NeuralNetworkElement>().text.text = PlayerPrefs.GetString("BASE_BOT_NN_NAME");
+        networksList.Add(net);
+        namesNN.Add(PlayerPrefs.GetString("BASE_BOT_NN_NAME"));
+
+        addNetworkButton.parent = null;
+        addNetworkButton.parent = scrollNetworkPanel;
     }
 }
