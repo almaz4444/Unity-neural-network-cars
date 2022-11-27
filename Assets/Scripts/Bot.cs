@@ -7,6 +7,7 @@ public class Bot : MonoBehaviour
 {
     public Transform followPos;
     public Transform lookPos;
+    public List<GameObject> detectedCheckPoints = new List<GameObject>();
 
     public LayerMask raycastMaskWalls;
 
@@ -62,7 +63,7 @@ public class Bot : MonoBehaviour
                     input[i] = 0;
                 }
             }
-            if (GetComponent<Rigidbody>().velocity.magnitude < 0.5f) fitness -= 0.001f;
+            if (GetComponent<Rigidbody>().velocity.magnitude < 0.1f) fitness -= 0.01f;
 
             if (transform.position.y <= 50)
             {
@@ -75,7 +76,7 @@ public class Bot : MonoBehaviour
             GetComponent<RearWheelDrive>().horizontalAxis = output[0];
             GetComponent<RearWheelDrive>().verticalAxis = output[1];
 
-            if(output[0] != oldRotateWheels && Time.time - timeOldRotateWheels >= 0.5f)
+            if(output[0] != oldRotateWheels && Time.time - timeOldRotateWheels <= 0.5f)
             {
                 fitness -= 0.01f;
 
@@ -105,14 +106,14 @@ public class Bot : MonoBehaviour
             fitness -= 10.0f;
             stop = true;
         }
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Win") && !stop) 
+        {
+            fitness += 10.0f;
+            stop = true;
+        }
         if(collision.gameObject.layer == LayerMask.NameToLayer("CarsColliders") && collision.gameObject != this.gameObject && !stop)
         {
             fitness -= 10.0f;
-            stop = true;
-        }
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Win") && !stop) 
-        {
-            fitness += 20.0f;
             stop = true;
         }
     }
@@ -126,7 +127,22 @@ public class Bot : MonoBehaviour
         }
         if(collider.gameObject.layer == LayerMask.NameToLayer("CheckPoint") && !stop)
         {
-            fitness += 0.1f;
+            bool isCollided = false;
+
+            foreach (GameObject checkPoint in detectedCheckPoints)
+            {
+                if (checkPoint == collider.gameObject) isCollided = true;
+            }
+            if(!isCollided)
+            {
+                fitness += 1f;
+                if(detectedCheckPoints.Count < 2) detectedCheckPoints.Add(collider.gameObject);
+                else
+                {
+                    detectedCheckPoints[1] = detectedCheckPoints[0];
+                    detectedCheckPoints[0] = collider.gameObject;
+                }
+            }
         }
     }
 

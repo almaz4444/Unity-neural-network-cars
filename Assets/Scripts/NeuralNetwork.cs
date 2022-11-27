@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
+public class NeuralNetwork : IComparable<NeuralNetwork>
 {
     private int[] layers;
     private float[][] neurons;
@@ -198,7 +198,6 @@ public class NeuralNetwork : MonoBehaviour, IComparable<NeuralNetwork>
 
     public void Save(string path)
     {
-        InterSceneScript.DeleteNetwork(path);
         int lineNum = 0;
 
         for (int i = 0; i < biases.Length; i++)

@@ -253,6 +253,7 @@ public class MenuManager : MonoBehaviour
         string path = InterSceneScript.GetPathWithNetworkName(selectedNetworkName);
         string neuralNetworkString = LoadAndReturnNeuralNetwork(path);
         
+        print(neuralNetworkString);
         if(neuralNetworkString != "") new NativeShare().SetSubject("Моя нейронная сеть.").SetText(neuralNetworkString).Share();
         else errorPanel.OpenErrorPanel("Невозможно отправить пустую модель!\nОбучите её и попробуйте снова.");
     }

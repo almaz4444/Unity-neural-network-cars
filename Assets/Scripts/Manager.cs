@@ -26,8 +26,8 @@ public class Manager : MonoBehaviour
 
     [Range(0.1f, 50f)] public float Gamespeed = 1f;
 
-    public List<NeuralNetwork> networks = new List<NeuralNetwork>(8);
-    public List<Bot> bots = new List<Bot>(8);
+    public List<NeuralNetwork> networks = new List<NeuralNetwork>();
+    public List<Bot> bots = new List<Bot>();
     private int followingBot = 0;
     private bool isCameraFollowing = true;
     private string neuralNetworkName;
@@ -41,7 +41,7 @@ public class Manager : MonoBehaviour
         neuralNetworkName = PlayerPrefs.GetString("SELECTED_BOT_NN");
 
         InitNetworks();
-        if (training) InvokeRepeating("CreateBots", 0.2f, timeFrame);
+        if (training) InvokeRepeating("CreateBots", 0, timeFrame);
         else CreateBots();
 
         string path = InterSceneScript.GetPathWithNetworkName(neuralNetworkName);
@@ -81,7 +81,7 @@ public class Manager : MonoBehaviour
             }
         }
 
-        if(bots[0] != null)
+        if(bots.Count != 0)
         {
             numOfStepsText.text = "Шагов: " + PlayerPrefs.GetInt(InterSceneScript.GetPathWithNetworkName(neuralNetworkName) + "_STEPS").ToString();
             botFitnessText.text = "Fitness: " + bots[followingBot].fitness.ToString();
@@ -98,7 +98,7 @@ public class Manager : MonoBehaviour
 
         for (int i = 0; i < populationSize; i++) 
         {
-            networks[i] = net;
+            networks.Add(net);
         }
     }
 
@@ -106,7 +106,7 @@ public class Manager : MonoBehaviour
     {
         Time.timeScale = Gamespeed;
         
-        if (bots[0] != null)
+        if (bots.Count != 0)
         {
             for (int i = 0; i < bots.Count; i++)
             {
@@ -115,6 +115,7 @@ public class Manager : MonoBehaviour
 
             SortNetworks();
 
+            bots = new List<Bot>();
             string path = InterSceneScript.GetPathWithNetworkName(neuralNetworkName) + "_STEPS";
             PlayerPrefs.SetInt(path, PlayerPrefs.GetInt(path) + 1);
         }
@@ -123,7 +124,7 @@ public class Manager : MonoBehaviour
         {
             Bot bot = (Instantiate(prefabs[i], spawnPoints[i])).GetComponent<Bot>();
             bot.network = networks[i];
-            bots[i] = bot;
+            bots.Add(bot);
         }
 
         if(isCameraFollowing)
@@ -140,7 +141,7 @@ public class Manager : MonoBehaviour
 
     public void SortNetworks()
     {
-        for (int i = 0; i < populationSize; i++)
+        for (int i = 0; i < bots.Count; i++)
         {
             bots[i].UpdateFitness();
         }

@@ -46,7 +46,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.9784465, g: 1, b: 0.44716978, a: 1}
-  m_Intensity: 3
+  m_Intensity: 1
   m_Range: 25
   m_SpotAngle: 100
   m_InnerSpotAngle: 1
@@ -429,7 +429,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4442516056662748051}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.95, y: -0.124, z: -2.797}
+  m_LocalPosition: {x: 0.95, y: -0.122, z: -2.781}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -840,7 +840,7 @@ Transform:
   m_GameObject: {fileID: 5975925403795717931}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.0125962, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1454809949094853532}
@@ -894,7 +894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isBot: 1
-  maxAngle: 50
+  maxAngle: 60
   maxTorque: 1000
   wheelShape: {fileID: 585842302875635063, guid: 4638f66915939944db88d68246bc0fcb,
     type: 3}
@@ -930,15 +930,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followPos: {fileID: 6082286347084240866}
   lookPos: {fileID: 1906911952834603002}
+  detectedCheckPoints: []
   raycastMaskWalls:
     serializedVersion: 2
     m_Bits: 65
   rayStartPosition: {x: 0, y: -0.5, z: 0}
-  radusRay: 20
   startProtection: 1
-  rayDistance: 25
+  rayDistance: 15
   drawRays: 0
-  network: {fileID: 0}
   fitness: 0
   stop: 0
 --- !u!1 &5975925404073967102
@@ -1111,7 +1110,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.9784465, g: 1, b: 0.44716978, a: 1}
-  m_Intensity: 3
+  m_Intensity: 1
   m_Range: 25
   m_SpotAngle: 100
   m_InnerSpotAngle: 1

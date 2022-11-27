@@ -39,20 +39,21 @@
      <Compile Include="Assets\Scripts\RearWheelDrive.cs" />
      <Compile Include="Assets\Scripts\Manager.cs" />
      <Compile Include="Assets\Scripts\CarController.cs" />
+     <Compile Include="Assets\Scripts\TextManager.cs" />
      <Compile Include="Assets\Animations\ToggleSetAnimatorBoolean.cs" />
      <Compile Include="Assets\Scripts\SceneTransition.cs" />
      <Compile Include="Assets\Scripts\Bot.cs" />
+     <Compile Include="Assets\Scripts\ErrorPanel.cs" />
      <Compile Include="Assets\Scripts\MenuManager.cs" />
      <Compile Include="Assets\Scripts\NeuralNetworkElement.cs" />
      <Compile Include="Assets\Scripts\NeuralNetwork.cs" />
      <Compile Include="Assets\Scripts\InterSceneScript.cs" />
      <Compile Include="Assets\Scripts\EasySuspension.cs" />
      <Compile Include="Assets\Scripts\AddNN.cs" />
-     <Compile Include="Assets\Scripts\ErrorPanel.cs" />
-     <Compile Include="Assets\Scripts\TextManager.cs" />
      <None Include="Assets\Save.txt" />
      <None Include="Assets\Pre-trained.txt" />
      <None Include="Assets\POLYGON city pack\Read_me.txt" />
+     <None Include="Assets\SkySeries Freebie\Hdri setup.txt" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.6f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
