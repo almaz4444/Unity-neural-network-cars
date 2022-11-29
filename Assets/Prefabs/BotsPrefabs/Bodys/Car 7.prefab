@@ -1196,13 +1196,13 @@ WheelCollider:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
+    m_AsymptoteValue: 1
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 3
+    m_AsymptoteSlip: 0.1
+    m_AsymptoteValue: 3
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!1 &5975925403602189784
@@ -1253,18 +1253,18 @@ WheelCollider:
   m_SuspensionDistance: 0.15328124
   m_ForceAppPointDistance: 0.12671173
   m_Mass: 20
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 19.28
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
+    m_AsymptoteValue: 1
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 3
+    m_AsymptoteSlip: 0.1
+    m_AsymptoteValue: 3
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!1 &5975925403795717931
@@ -1353,7 +1353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isBot: 1
-  maxAngle: 80
+  maxAngle: 50
   maxTorque: 2000
   wheelShape: {fileID: 585842302875635063, guid: 4638f66915939944db88d68246bc0fcb,
     type: 3}
@@ -1470,13 +1470,13 @@ WheelCollider:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
+    m_AsymptoteValue: 1
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 3
+    m_AsymptoteSlip: 0.1
+    m_AsymptoteValue: 3
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!1 &5975925404135397259
@@ -1532,13 +1532,13 @@ WheelCollider:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
-    m_AsymptoteValue: 0.5
+    m_AsymptoteValue: 1
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
-    m_AsymptoteSlip: 0.5
-    m_AsymptoteValue: 0.75
+    m_ExtremumValue: 3
+    m_AsymptoteSlip: 0.1
+    m_AsymptoteValue: 3
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!1 &5995268450588934105
