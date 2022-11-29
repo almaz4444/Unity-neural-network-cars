@@ -777,6 +777,14 @@
       <Project>{a6084157-9ea0-13eb-d96b-329c4737447c}</Project>
       <Name>NativeShare.Runtime</Name>
     </ProjectReference>
+    <ProjectReference Include="NavMeshComponentsEditor.csproj">
+      <Project>{f084332b-7178-f067-93b4-aef632e360b0}</Project>
+      <Name>NavMeshComponentsEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="NavMeshComponents.csproj">
+      <Project>{105d7d78-1ce7-fbb0-be96-7913ac59fba5}</Project>
+      <Name>NavMeshComponents</Name>
+    </ProjectReference>
     <ProjectReference Include="NativeShare.Editor.csproj">
       <Project>{6bf44b1a-721f-0251-83a0-1aae8d241953}</Project>
       <Name>NativeShare.Editor</Name>

@@ -11,10 +11,10 @@ public class InterSceneScript : MonoBehaviour
     private static float[][][] weights;
 
 
-    public static void InitNetwork(int radiusRay)
+    public static void InitNetwork(int[] layers)
     {
-        Bot.Awake(radiusRay);
-        layers = Bot.layers;
+        Bot.Awake(layers);
+        InterSceneScript.layers = layers;
 
         InterSceneScript.InitNeurons();
         InterSceneScript.InitBiases();

@@ -8,10 +8,9 @@ public class Bot : MonoBehaviour
     public Transform followPos;
     public Transform lookPos;
     public List<GameObject> detectedCheckPoints = new List<GameObject>();
-
     public LayerMask raycastMaskWalls;
 
-    public Vector3 rayStartPosition = new Vector3(0, 0, 0);
+    public Transform[] raysTransforms;
     public float startProtection = 1.0f;
     public float rayDistance = 20.0f;
     public bool drawRays = false;
@@ -23,19 +22,18 @@ public class Bot : MonoBehaviour
     public float fitness;
     public bool stop = false;
 
-    public static int radiusRay;
     private float timeOldRotateWheels = 0;
     private float oldRotateWheels = 0;
 
-    public static void Awake(int rRay)
+    public static void Awake(int[] layer)
     {
-        radiusRay = rRay;
-        layers = new int[3] { 360/radiusRay, Mathf.RoundToInt(360/radiusRay*15/18), 2 };
+        layers = layer;
         input = new float[layers[0]];
     }
 
     private void Start()
     {
+        gameObject.layer = LayerMask.NameToLayer("MyCollider");
         transform.parent = null;
     }
 
@@ -43,13 +41,19 @@ public class Bot : MonoBehaviour
     {
         if(!stop)
         {
-            for (int i = 0; i < 360/radiusRay; i++)
+            for (int i = 0; i < raysTransforms.Length; i++)
             {
-                Vector3 newVector = Quaternion.AngleAxis(i * radiusRay, new Vector3(0, 1, 0)) * transform.right;
+                Vector3 newVector = Vector3.zero;
                 RaycastHit hit;
-                Ray Ray = new Ray(transform.position + rayStartPosition, newVector);
 
-                if(drawRays) Debug.DrawRay(transform.position + rayStartPosition, newVector * rayDistance, Color.green);
+                if(i < 9) newVector = Quaternion.AngleAxis(i * 20 - 80, Vector3.up) * transform.forward;
+                else if(i < 12) newVector = Quaternion.AngleAxis(180, Vector3.up) * transform.forward;
+                else if(i < 15) newVector = Quaternion.AngleAxis(-90, Vector3.up) * transform.forward;
+                else if(i < 18) newVector = Quaternion.AngleAxis(90, Vector3.up) * transform.forward;
+
+                Ray Ray = new Ray(raysTransforms[i].position, newVector);
+
+                if(drawRays) Debug.DrawRay(raysTransforms[i].position, newVector * rayDistance, Color.green);
 
                 if (Physics.Raycast(Ray, out hit, rayDistance, raycastMaskWalls))
                 {
@@ -63,7 +67,10 @@ public class Bot : MonoBehaviour
                     input[i] = 0;
                 }
             }
-            if (GetComponent<Rigidbody>().velocity.magnitude < 0.1f) fitness -= 0.01f;
+            input[raysTransforms.Length] = transform.localRotation.y / 360;
+            input[raysTransforms.Length + 1] = Mathf.Abs(GetComponent<Rigidbody>().velocity.magnitude) / 100;
+
+            if (GetComponent<Rigidbody>().velocity.magnitude < 0.05f) fitness -= 0.001f;
 
             if (transform.position.y <= 50)
             {
@@ -135,7 +142,7 @@ public class Bot : MonoBehaviour
             }
             if(!isCollided)
             {
-                fitness += 1f;
+                fitness += 2f;
                 if(detectedCheckPoints.Count < 2) detectedCheckPoints.Add(collider.gameObject);
                 else
                 {

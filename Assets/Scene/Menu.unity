@@ -7348,8 +7348,15 @@ MonoBehaviour:
 
     -0,06884801
 
+    0
+
+    0
+
+    0
+
+    0
+
 '
-  radusRay: 20
   maxNeuralNetworksCount: 5
   networkElementPrefab: {fileID: 8562490327218014977, guid: b6d95fd714939ef4eb14200509af70d7,
     type: 3}
@@ -7365,6 +7372,7 @@ MonoBehaviour:
   - {fileID: 711891216}
   - {fileID: 126194015}
   - {fileID: 1615855332}
+  layers: 14000000120000000200000002000000
 --- !u!4 &1537292565
 Transform:
   m_ObjectHideFlags: 0

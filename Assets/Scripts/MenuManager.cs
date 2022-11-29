@@ -6,7 +6,6 @@ using UnityEngine;
 public class MenuManager : MonoBehaviour
 {
     [TextArea] public string preTrainedNetwork;
-    public int radusRay = 20;
     public int maxNeuralNetworksCount;
 
     public GameObject networkElementPrefab;
@@ -17,6 +16,8 @@ public class MenuManager : MonoBehaviour
     public ErrorPanel errorPanel;
     public Button[] buttons;
 
+    public int[] layers = new int[3] { 4, 3, 2 };
+
     public static string selectedNetworkName;
     public static int networksCount;
     public static List<string> namesNN;
@@ -25,7 +26,7 @@ public class MenuManager : MonoBehaviour
     
     private void Start()
     {
-        InterSceneScript.InitNetwork(radusRay);
+        InterSceneScript.InitNetwork(layers);
         InterSceneScript.maxNeuralNetworksCount = maxNeuralNetworksCount;
 
         selectedNetworkName = null;

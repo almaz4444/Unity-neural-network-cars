@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine;
 using Cinemachine;
@@ -63,7 +64,7 @@ public class Manager : MonoBehaviour
                 {
                     GameObject.Destroy(bots[i].gameObject);
 
-                    Bot bot = (Instantiate(prefabs[i], spawnPoints[i])).GetComponent<Bot>();
+                    Bot bot = (Instantiate(prefabs[i], spawnPoints[i]).GetComponent<Bot>());
                     bot.network = networks[i];
                     bots[i] = bot;
                     
