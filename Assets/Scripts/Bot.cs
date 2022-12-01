@@ -33,7 +33,6 @@ public class Bot : MonoBehaviour
 
     private void Start()
     {
-        gameObject.layer = LayerMask.NameToLayer("MyCollider");
         transform.parent = null;
     }
 

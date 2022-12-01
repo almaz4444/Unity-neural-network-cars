@@ -94,6 +94,9 @@ public class InterSceneScript : MonoBehaviour
                     Destroy(MenuManager.networksList[i]);
                     MenuManager.namesNN.RemoveAt(i);
                     MenuManager.networksList.RemoveAt(i);
+                    
+                    PlayerPrefs.DeleteKey(path + "_NAME");
+                    PlayerPrefs.DeleteKey(path + "_STEPS");
 
                     int num = 0;
                     while (true)
@@ -116,7 +119,6 @@ public class InterSceneScript : MonoBehaviour
 
     private static void Save(string path)
     {
-        if(MenuManager.namesNN != null) DeleteNetwork(path);
         int lineNum = 0;
 
         for (int i = 0; i < biases.Length; i++)
