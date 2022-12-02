@@ -255,7 +255,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.9784465, g: 1, b: 0.44716978, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.7
   m_Range: 25
   m_SpotAngle: 100
   m_InnerSpotAngle: 1
@@ -517,7 +517,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3158053513017186011}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0.95, y: -0.122, z: -2.781}
+  m_LocalPosition: {x: -0.95, y: -0.068, z: -2.6935}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -578,7 +578,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 35.16
+  m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -855,7 +855,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4442516056662748051}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.95, y: -0.122, z: -2.781}
+  m_LocalPosition: {x: 0.95, y: -0.06799999, z: -2.6935}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -916,7 +916,7 @@ Light:
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 35.16
+  m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -1186,10 +1186,10 @@ WheelCollider:
   m_Radius: 0.42
   m_SuspensionSpring:
     spring: 10253.824
-    damper: 8203.06
+    damper: 10253.824
     targetPosition: 0
   m_SuspensionDistance: 0.15328124
-  m_ForceAppPointDistance: 0.12671173
+  m_ForceAppPointDistance: 0.42671174
   m_Mass: 20
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -1200,9 +1200,9 @@ WheelCollider:
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
-    m_ExtremumValue: 2
+    m_ExtremumValue: 5
     m_AsymptoteSlip: 0.1
-    m_AsymptoteValue: 3
+    m_AsymptoteValue: 5
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!1 &5975925403602189784
@@ -1248,10 +1248,10 @@ WheelCollider:
   m_Radius: 0.42
   m_SuspensionSpring:
     spring: 10247.246
-    damper: 8197.797
+    damper: 10247.246
     targetPosition: 0
   m_SuspensionDistance: 0.15328124
-  m_ForceAppPointDistance: 0.12671173
+  m_ForceAppPointDistance: 0.42671174
   m_Mass: 20
   m_WheelDampingRate: 19.28
   m_ForwardFriction:
@@ -1262,9 +1262,9 @@ WheelCollider:
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
-    m_ExtremumValue: 2
+    m_ExtremumValue: 5
     m_AsymptoteSlip: 0.1
-    m_AsymptoteValue: 3
+    m_AsymptoteValue: 5
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!1 &5975925403795717931
@@ -1297,7 +1297,7 @@ Transform:
   m_GameObject: {fileID: 5975925403795717931}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.0125962, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1454809949094853532}
@@ -1353,7 +1353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isBot: 1
-  maxAngle: 25
+  maxAngle: 30
   maxTorque: 1000
   wheelShape: {fileID: 585842302875635063, guid: 4638f66915939944db88d68246bc0fcb,
     type: 3}
@@ -1371,10 +1371,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18db5f05346cab24fba0756e713f6f18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  naturalFrequency: 5
-  dampingRatio: 2
-  forceShift: 1
-  setSuspensionDistance: 1
+  naturalFrequency: 3.5
+  dampingRatio: 2.5
+  forceShift: 0.7
+  setSuspensionDistance: 0
 --- !u!114 &5583846994681832088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1460,10 +1460,10 @@ WheelCollider:
   m_Radius: 0.42
   m_SuspensionSpring:
     spring: 8502.754
-    damper: 6802.203
+    damper: 8502.754
     targetPosition: 0
   m_SuspensionDistance: 0.15328124
-  m_ForceAppPointDistance: 0.12671173
+  m_ForceAppPointDistance: 0.42671174
   m_Mass: 20
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -1474,9 +1474,9 @@ WheelCollider:
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
-    m_ExtremumValue: 2
+    m_ExtremumValue: 5
     m_AsymptoteSlip: 0.1
-    m_AsymptoteValue: 3
+    m_AsymptoteValue: 5
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!1 &5975925404135397259
@@ -1522,10 +1522,10 @@ WheelCollider:
   m_Radius: 0.42
   m_SuspensionSpring:
     spring: 8496.178
-    damper: 6796.942
+    damper: 8496.178
     targetPosition: 0
   m_SuspensionDistance: 0.15328127
-  m_ForceAppPointDistance: 0.12671173
+  m_ForceAppPointDistance: 0.42671174
   m_Mass: 20
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
@@ -1536,9 +1536,9 @@ WheelCollider:
     m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
-    m_ExtremumValue: 2
+    m_ExtremumValue: 5
     m_AsymptoteSlip: 0.1
-    m_AsymptoteValue: 3
+    m_AsymptoteValue: 5
     m_Stiffness: 1
   m_Enabled: 1
 --- !u!1 &5995268450588934105
@@ -1680,7 +1680,7 @@ Light:
   m_Type: 0
   m_Shape: 0
   m_Color: {r: 0.9784465, g: 1, b: 0.44716978, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.7
   m_Range: 25
   m_SpotAngle: 100
   m_InnerSpotAngle: 1

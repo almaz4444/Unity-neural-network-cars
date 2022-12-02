@@ -8,11 +8,13 @@ public class SliderManager : MonoBehaviour
     public InputField inputField;
     
     private Slider slider;
+    private Toggle toggle;
 
 
     private void Awake()
     {
         slider = GetComponent<Slider>();
+        toggle = GetComponent<Toggle>();
     }
 
     public void SaveValues()
@@ -20,6 +22,7 @@ public class SliderManager : MonoBehaviour
         if(inputField.placeholder.GetComponent<Text>().text == "GameSpeed") Time.timeScale = slider.value;
         if(inputField.placeholder.GetComponent<Text>().text == "MutationChance") Manager.MutationChance = slider.value;
         if(inputField.placeholder.GetComponent<Text>().text == "MutationStrength") Manager.MutationStrength = slider.value;
+        if(inputField.placeholder.GetComponent<Text>().text == "IsUpCamera") Manager.IsUpCamera = toggle.isOn;
     }
 
     public void SetDefaultValue()
@@ -45,6 +48,12 @@ public class SliderManager : MonoBehaviour
 
             Manager.MutationStrength = 0.01f;
         }
+        if(inputField.placeholder.GetComponent<Text>().text == "IsUpCamera")
+        {
+            toggle.isOn = false;
+
+            Manager.IsUpCamera = false;
+        }
     }
 
     public void SetCurrentValue()
@@ -63,6 +72,10 @@ public class SliderManager : MonoBehaviour
         {
             inputField.text = Manager.MutationStrength.ToString();
             slider.value = Manager.MutationStrength;
+        }
+        if(inputField.placeholder.GetComponent<Text>().text == "IsUpCamera")
+        {
+            toggle.isOn = Manager.IsUpCamera;
         }
     }
 

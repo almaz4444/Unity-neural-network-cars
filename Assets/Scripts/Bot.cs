@@ -69,8 +69,6 @@ public class Bot : MonoBehaviour
             input[raysTransforms.Length] = transform.localRotation.y / 360;
             input[raysTransforms.Length + 1] = Mathf.Abs(GetComponent<Rigidbody>().velocity.magnitude) / 100;
 
-            if (GetComponent<Rigidbody>().velocity.magnitude < 0.05f) fitness -= 0.001f;
-
             if (transform.position.y <= 50)
             {
                 fitness -= 5.0f;
@@ -82,9 +80,9 @@ public class Bot : MonoBehaviour
             GetComponent<RearWheelDrive>().horizontalAxis = output[0];
             GetComponent<RearWheelDrive>().verticalAxis = output[1];
 
-            if(output[0] != oldRotateWheels && Time.time - timeOldRotateWheels <= 0.5f)
+            if(output[0] != oldRotateWheels && Time.time - timeOldRotateWheels >= 0.5f)
             {
-                fitness -= 0.01f;
+                fitness -= (0.01f * Mathf.Abs(output[0] - oldRotateWheels));
 
                 oldRotateWheels = output[0];
                 timeOldRotateWheels = Time.time;

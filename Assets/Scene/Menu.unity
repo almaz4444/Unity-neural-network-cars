@@ -1478,7 +1478,7 @@ MonoBehaviour:
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 0
-    m_HorizontalOverflow: 1
+    m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
@@ -3686,7 +3686,7 @@ MonoBehaviour:
   m_InputType: 0
   m_AsteriskChar: 42
   m_KeyboardType: 0
-  m_LineType: 0
+  m_LineType: 2
   m_HideMobileInput: 0
   m_CharacterValidation: 0
   m_CharacterLimit: 0
@@ -7578,7 +7578,7 @@ MonoBehaviour:
   - {fileID: 711891216}
   - {fileID: 126194015}
   - {fileID: 1615855332}
-  layers: 14000000120000000200000002000000
+  layers: 14000000120000001200000002000000
 --- !u!4 &1537292565
 Transform:
   m_ObjectHideFlags: 0

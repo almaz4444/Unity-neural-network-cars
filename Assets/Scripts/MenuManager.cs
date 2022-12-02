@@ -127,6 +127,7 @@ public class MenuManager : MonoBehaviour
             }
 
             PlayerPrefs.SetString(pathCopedNetwork + "_NAME", name);
+            PlayerPrefs.SetInt(pathCopedNetwork + "_STEPS", PlayerPrefs.GetInt(pathCopingNetwork + "_STEPS"));
 
             GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
             net.GetComponent<NeuralNetworkElement>().text.text = name;
@@ -155,6 +156,7 @@ public class MenuManager : MonoBehaviour
             if(isAllow)
             {              
                 PlayerPrefs.SetString((networksCount - 1).ToString() + "_BOT_NN_NAME", name);
+                PlayerPrefs.SetString((networksCount - 1).ToString() + "_BOT_NN", "");
 
                 GameObject net = Instantiate(networkElementPrefab, scrollNetworkPanel);
                 net.GetComponent<NeuralNetworkElement>().text.text = name;
@@ -174,12 +176,12 @@ public class MenuManager : MonoBehaviour
     {
         if(namesNN.Count < InterSceneScript.maxNeuralNetworksCount + 1)
         {
-            print(network.Split("\n\n").Length);
             if(network.Split("\n\n").Length >= 3)
             {
                 string path = (networksCount - 1).ToString() + "_BOT_NN";
                 string neuralNetworkName = network.Split("\n\n")[0];
                 PlayerPrefs.SetInt(path + "_STEPS", int.Parse(network.Split("\n\n")[1]));
+                print(int.Parse(network.Split("\n\n")[1]));
 
                 foreach (var name in namesNN) if(name == neuralNetworkName) neuralNetworkName = "Нейосеть " + (networksCount + 1).ToString();
                 
