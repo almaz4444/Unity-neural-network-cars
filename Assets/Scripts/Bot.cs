@@ -38,7 +38,7 @@ public class Bot : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(!stop)
+        if(!stop && GetComponent<RearWheelDrive>().isBot)
         {
             for (int i = 0; i < raysTransforms.Length; i++)
             {
@@ -66,7 +66,7 @@ public class Bot : MonoBehaviour
                     input[i] = 0;
                 }
             }
-            input[raysTransforms.Length] = transform.localRotation.y / 360;
+            input[raysTransforms.Length] = oldRotateWheels;
             input[raysTransforms.Length + 1] = Mathf.Abs(GetComponent<Rigidbody>().velocity.magnitude) / 100;
 
             if (transform.position.y <= 50)
@@ -80,15 +80,15 @@ public class Bot : MonoBehaviour
             GetComponent<RearWheelDrive>().horizontalAxis = output[0];
             GetComponent<RearWheelDrive>().verticalAxis = output[1];
 
-            if(output[0] != oldRotateWheels && Time.time - timeOldRotateWheels >= 0.5f)
+            if(output[0] != oldRotateWheels && Time.time - timeOldRotateWheels >= 0.2f)
             {
-                fitness -= (0.01f * Mathf.Abs(output[0] - oldRotateWheels));
+                fitness -= (0.3f * Mathf.Abs(output[0] - oldRotateWheels));
 
                 oldRotateWheels = output[0];
                 timeOldRotateWheels = Time.time;
             }
         }
-        else
+        else if(GetComponent<RearWheelDrive>().isBot)
         {
             GetComponent<RearWheelDrive>().horizontalAxis = 0;
             GetComponent<RearWheelDrive>().verticalAxis = 0;
@@ -99,6 +99,12 @@ public class Bot : MonoBehaviour
             stop = false;
             fitness = 0;
             startProtection -= Time.deltaTime;
+        }
+
+        if(Manager.IsCarControl && transform.position.y <= 50)
+        {
+            Destroy(gameObject);
+            Manager.IsCarControl = false;
         }
     }
 
@@ -139,7 +145,7 @@ public class Bot : MonoBehaviour
             }
             if(!isCollided)
             {
-                fitness += 2f;
+                fitness += 5f;
                 if(detectedCheckPoints.Count < 2) detectedCheckPoints.Add(collider.gameObject);
                 else
                 {

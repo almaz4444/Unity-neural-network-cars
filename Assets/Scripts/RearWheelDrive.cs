@@ -35,17 +35,9 @@ public class RearWheelDrive : MonoBehaviour {
 	{
 		float angle;
 		float torque;
-
-		if(isBot)
-		{
-			angle = maxAngle * horizontalAxis;
-			torque = maxTorque * verticalAxis;
-		}
-		else
-		{
-			angle = maxAngle * Input.GetAxis("Horizontal");
-			torque = maxTorque * Input.GetAxis("Vertical");
-		}
+		
+		angle = maxAngle * horizontalAxis;
+		torque = maxTorque * verticalAxis;
 
 		foreach (WheelCollider wheel in wheels)
 		{

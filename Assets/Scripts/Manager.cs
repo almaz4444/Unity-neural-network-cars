@@ -19,15 +19,18 @@ public class Manager : MonoBehaviour
     public Text botFitnessText;
 
     public GameObject[] lights;
+    public Joystick rotateWheelsBotJoystick; 
 
     public static int[] layers;
 
     public static float MutationChance;
     public static float MutationStrength;
     public static bool IsUpCamera = false;
+    public static bool IsCarControl = false;
 
     public List<NeuralNetwork> networks = new List<NeuralNetwork>();
     public List<Bot> bots = new List<Bot>();
+    private GameObject myCar;
     private int followingBot = 0;
     private bool isCameraFollowing = true;
     private string neuralNetworkName;
@@ -61,7 +64,7 @@ public class Manager : MonoBehaviour
         {
             for (int i = 0; i < bots.Count; i++)
             {
-                if(bots[i].stop)
+                if(bots[i].stop && bots[i].network != null)
                 {
                     GameObject.Destroy(bots[i].gameObject);
 
@@ -69,15 +72,18 @@ public class Manager : MonoBehaviour
                     bot.network = networks[i];
                     bots[i] = bot;
                     
-                    if(isCameraFollowing)
+                    if(!IsCarControl)
                     {
-                        vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
-                        vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
-                    }
-                    else
-                    {
-                        vCam2.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].followPos;
-                        vCam2.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].lookPos;
+                        if(isCameraFollowing)
+                        {
+                            vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
+                            vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
+                        }
+                        else
+                        {
+                            vCam2.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].followPos;
+                            vCam2.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].lookPos;
+                        }
                     }
                 }
             }
@@ -98,7 +104,7 @@ public class Manager : MonoBehaviour
             vCam2.SetActive(false);
             vCam3.SetActive(true);
         }
-        else
+        else if(!IsCarControl)
         {
             vCam3.SetActive(false);
 
@@ -113,6 +119,8 @@ public class Manager : MonoBehaviour
                 vCam2.SetActive(true);
             }
         }
+        
+        if(IsCarControl && myCar != null) myCar.GetComponent<RearWheelDrive>().horizontalAxis = rotateWheelsBotJoystick.Horizontal;
     }
 
     public void InitNetworks()
@@ -132,7 +140,8 @@ public class Manager : MonoBehaviour
         {
             for (int i = 0; i < bots.Count; i++)
             {
-                GameObject.Destroy(bots[i].gameObject);
+                try { GameObject.Destroy(bots[i].gameObject); }
+                catch {  }
             }
 
             SortNetworks();
@@ -149,15 +158,18 @@ public class Manager : MonoBehaviour
             bots.Add(bot);
         }
 
-        if(isCameraFollowing)
+        if(!IsCarControl)
         {
-            vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
-            vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
-        }
-        else
-        {
-            vCam2.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].followPos;
-            vCam2.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].lookPos;
+            if(isCameraFollowing)
+            {
+                vCam1.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].transform;
+                vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].transform;
+            }
+            else
+            {
+                vCam2.GetComponent<CinemachineVirtualCamera>().Follow = bots[followingBot].followPos;
+                vCam2.GetComponent<CinemachineVirtualCamera>().LookAt = bots[followingBot].lookPos;
+            }
         }
     }
 
@@ -231,5 +243,23 @@ public class Manager : MonoBehaviour
     public void SetOldTimeScale()
     {
         Time.timeScale = oldTimeScale;
+    }
+
+    public void CreateMyCar()
+    {
+        if(myCar != null) Destroy(myCar);
+
+        myCar = Instantiate(prefabs[0], spawnPoints[0]);
+
+        myCar.GetComponent<RearWheelDrive>().isBot = false;
+        vCam1.GetComponent<CinemachineVirtualCamera>().Follow = myCar.transform;
+        vCam1.GetComponent<CinemachineVirtualCamera>().LookAt = myCar.transform;
+
+        IsCarControl = true;
+    }
+
+    public void GasBot(float value)
+    {
+        myCar.GetComponent<RearWheelDrive>().verticalAxis = value;
     }
 }
